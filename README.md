@@ -81,7 +81,7 @@ Standard Markdown, plus:
 > Add custom text on the marker line.
 ```
 
-Available types: `NOTE`, `TIP`, `WARNING`, `IMPORTANT`, `CAUTION`, `SUMMARY`, `EXAMPLE`.
+Available types: `NOTE`, `TIP`, `WARNING`, `IMPORTANT`, `CAUTION`
 
 **Images** — auto-centered, width-constrained:
 
