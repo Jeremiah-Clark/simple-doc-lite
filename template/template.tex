@@ -1,7 +1,7 @@
 % ─────────────────────────────────────────────────────────────
-% SimpleDoc v1.1.0 — LaTeX Template
-% https://YOUR_MARKETPLACE_URL
-% Copyright (c) 2026 Jeremiah Clark. All rights reserved.
+% Simple Doc Lite v1.1.0 — LaTeX Template
+% https://github.com/YOUR_GITHUB/simple-doc
+% Copyright (c) 2025 Jeremiah Clark. MIT License.
 % ─────────────────────────────────────────────────────────────
 % template.tex — Pandoc LaTeX template for documents
 % All formatting lives here; Markdown files stay pure GFM.
@@ -11,7 +11,6 @@
 % ---------------------------------------------------------------------------
 % Core packages
 % ---------------------------------------------------------------------------
-% Pre-declare hyperref options before any package might load it as a dependency
 \PassOptionsToPackage{unicode}{hyperref}
 
 \usepackage[%
@@ -30,79 +29,33 @@
 \usepackage{titlesec}
 \usepackage[framemethod=tikz]{mdframed}
 \usepackage{longtable,booktabs,array}
-\newcounter{none}      % Required: Pandoc wraps tables in \def\LTcaptype{none}
+\newcounter{none}
 \usepackage{amssymb}
 \usepackage{calc}
 \usepackage{needspace}
 \usepackage[final, protrusion=true, expansion=false]{microtype}
-\usepackage{lastpage}
-
-% ---------------------------------------------------------------------------
-% Watermark (optional — set watermark: "DRAFT" in master.yaml to enable)
-% ---------------------------------------------------------------------------
-$if(watermark)$
-\usepackage{eso-pic}
-\AddToShipoutPictureFG{%
-  \begin{tikzpicture}[remember picture, overlay]
-    \node[rotate=45, font=\fontsize{$if(watermark-scale)$$watermark-scale$$else$80pt$endif$}{$if(watermark-scale)$$watermark-scale$$else$80pt$endif$}\selectfont\sffamily,
-          text=black, opacity=$if(watermark-opacity)$$watermark-opacity$$else$0.15$endif$]
-      at (current page.center) {$watermark$};
-  \end{tikzpicture}%
-}
-$endif$
 
 % ---------------------------------------------------------------------------
 % Font setup (XeLaTeX / LuaLaTeX)
 % ---------------------------------------------------------------------------
-% Tries the primary font first; if it isn't installed, falls back to the
-% fallback font from master.yaml, or to Noto Sans / Noto Sans Mono as a
-% last resort.  A console message is printed when a fallback is used.
+% Lite version uses a single font per slot — set font-body, font-heading,
+% and font-mono in master.yaml. Defaults to Noto Sans / Noto Sans Mono.
 \usepackage{ifxetex,ifluatex}
 \usepackage{newunicodechar}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi>0
+\ifxetex
   \usepackage{fontspec}
-
-  % ── Body font ──
-$if(font-body)$
-  \IfFontExistsTF{$font-body$}{%
-    \setmainfont{$font-body$}%
-  }{%
-    \typeout{Simple Doc: body font "$font-body$" not found — using fallback.}%
-    \setmainfont{$if(font-body-fallback)$$font-body-fallback$$else$Noto Sans$endif$}%
-  }
-$else$
-  \setmainfont{$if(font-body-fallback)$$font-body-fallback$$else$Noto Sans$endif$}
-$endif$
-
-  % ── Heading font ──
-$if(font-heading)$
-  \IfFontExistsTF{$font-heading$}{%
-    \setsansfont{$font-heading$}%
-  }{%
-    \typeout{Simple Doc: heading font "$font-heading$" not found — using fallback.}%
-    \setsansfont{$if(font-heading-fallback)$$font-heading-fallback$$else$Noto Sans$endif$}%
-  }
-$else$
-  \setsansfont{$if(font-heading-fallback)$$font-heading-fallback$$else$Noto Sans$endif$}
-$endif$
-
-  % ── Monospace font ──
-$if(font-mono)$
-  \IfFontExistsTF{$font-mono$}{%
-    \setmonofont{$font-mono$}[Scale=MatchLowercase]%
-  }{%
-    \typeout{Simple Doc: mono font "$font-mono$" not found — using fallback.}%
-    \setmonofont{$if(font-mono-fallback)$$font-mono-fallback$$else$Noto Sans Mono$endif$}[Scale=MatchLowercase]%
-  }
-$else$
-  \setmonofont{$if(font-mono-fallback)$$font-mono-fallback$$else$Noto Sans Mono$endif$}[Scale=MatchLowercase]
-$endif$
-
+  \setmainfont{$if(font-body)$$font-body$$else$Noto Sans$endif$}
+  \setsansfont{$if(font-heading)$$font-heading$$else$Noto Sans$endif$}
+  \setmonofont{$if(font-mono)$$font-mono$$else$Noto Sans Mono$endif$}[Scale=MatchLowercase]
 \fi
-% Redirect any typewriter context to sans-serif (prevents ectt fallback)
+\ifluatex
+  \usepackage{fontspec}
+  \setmainfont{$if(font-body)$$font-body$$else$Noto Sans$endif$}
+  \setsansfont{$if(font-heading)$$font-heading$$else$Noto Sans$endif$}
+  \setmonofont{$if(font-mono)$$font-mono$$else$Noto Sans Mono$endif$}[Scale=MatchLowercase]
+\fi
 \renewcommand{\ttdefault}{\sfdefault}
 
-% Map non-breaking hyphen (U+2011) to a regular hyphen — most fonts lack it
 \newunicodechar{‑}{-}
 
 \linespread{$if(linespread)$$linespread$$else$1.15$endif$}
@@ -114,20 +67,19 @@ $endif$
 \definecolor{linkblue}{RGB}{$if(color-link)$$color-link$$else$40,80,180$endif$}
 
 % ---------------------------------------------------------------------------
-% Page break quality — widow, orphan, and hyphenation control
+% Page break quality
 % ---------------------------------------------------------------------------
-\widowpenalty=10000        % Never strand the last line of a paragraph on a new page
-\clubpenalty=10000         % Never strand the first line of a paragraph at page bottom
-\displaywidowpenalty=10000 % Same protection for lines before display equations
-\brokenpenalty=2000        % Strongly discourage page breaks after hyphenated lines
-\hyphenpenalty=200         % Prefer not to hyphenate at all
-\exhyphenpenalty=200       % Same for explicit hyphens (e.g. "well-known")
+\widowpenalty=10000
+\clubpenalty=10000
+\displaywidowpenalty=10000
+\brokenpenalty=2000
+\hyphenpenalty=200
+\exhyphenpenalty=200
 \raggedbottom
 
 % ---------------------------------------------------------------------------
 % Hyperref (must be loaded after fontspec)
 % ---------------------------------------------------------------------------
-% Strikethrough support (Pandoc generates \st{} for ~~text~~)
 \usepackage[normalem]{ulem}
 \newcommand{\st}[1]{\sout{#1}}
 
@@ -160,7 +112,7 @@ $endif$
 \setlist{noitemsep, topsep=0pt, parsep=3pt, partopsep=0pt, before={\interlinepenalty=800}}
 
 % ---------------------------------------------------------------------------
-% Section heading styles (with keep-with-next via \needspace)
+% Section heading styles
 % ---------------------------------------------------------------------------
 \titleformat{\section}
   {\needspace{6\baselineskip}\Large\bfseries\sffamily\color{brandblue}}
@@ -175,7 +127,6 @@ $endif$
   {\needspace{3\baselineskip}\normalsize\bfseries\sffamily}
   {}{0em}{}[\quad]
 
-% Section numbering depth: 0 = none, 1 = sections only, 2 = + subsections, 3 = + subsubsections
 \setcounter{secnumdepth}{$if(secnumdepth)$$secnumdepth$$else$0$endif$}
 
 % ---------------------------------------------------------------------------
@@ -183,42 +134,24 @@ $endif$
 % ---------------------------------------------------------------------------
 \pagestyle{fancy}
 \fancyhf{}
-$if(header-left)$
-\fancyhead[L]{$header-left$}
-$endif$
-$if(header-center)$
-\fancyhead[C]{$header-center$}
-$endif$
-$if(header-right)$
-\fancyhead[R]{$header-right$}
-$endif$
 \fancyfoot[L]{$title$$if(version)$\hspace{0.75em}{\small\color{black!60}v$version$}$endif$}
-\fancyfoot[R]{Page \thepage$if(page-total)$\ of \pageref{LastPage}$endif$}
+\fancyfoot[R]{Page \thepage}
 \renewcommand{\headrulewidth}{$if(header-rule)$$header-rule$$else$0.4pt$endif$}
 \renewcommand{\footrulewidth}{$if(footer-rule)$$footer-rule$$else$0.4pt$endif$}
 \fancypagestyle{plain}{\fancyhf{}}
 
-% Short-form page 1 — no running header (the header block is the branding),
-% but keep the footer with page numbers.
+% Short-form page 1 — no running header, but keep the footer with page number.
 \fancypagestyle{firstpage}{%
   \fancyhf{}%
   \fancyfoot[L]{$title$$if(version)$\hspace{0.75em}{\small\color{black!60}v$version$}$endif$}%
-  \fancyfoot[R]{Page \thepage$if(page-total)$\ of \pageref{LastPage}$endif$}%
+  \fancyfoot[R]{Page \thepage}%
   \renewcommand{\headrulewidth}{0pt}%
   \renewcommand{\footrulewidth}{$if(footer-rule)$$footer-rule$$else$0.4pt$endif$}%
 }
 
 % ---------------------------------------------------------------------------
-% Callout / admonition environments  (mdframed)
+% Callout / admonition environments
 % ---------------------------------------------------------------------------
-% Each environment accepts an optional argument to override the default title:
-%   \begin{example}                    → title bar says "Example"
-%   \begin{example}[Hand Count Reset]  → title bar says "Hand Count Reset"
-%
-% Helper macro: \definecallout{envname}{Default Title}{base-color}
-% Derives border/title bar (color!80!black) and background (color!5!white)
-% from a single base color.
-
 \newcommand{\definecallout}[3]{%
   \newenvironment{#1}[1][#2]{%
     \begin{mdframed}[
@@ -242,7 +175,6 @@ $endif$
 \definecallout{summary}{Summary}{$if(color-summary)$$color-summary$$else$violet$endif$}
 \definecallout{example}{Example}{$if(color-example)$$color-example$$else$black$endif$}
 
-% Blockquotes (for any blockquote not converted to an admonition)
 \renewenvironment{quote}{%
   \begin{mdframed}[
     linecolor=black!40, backgroundcolor=black!0,
@@ -255,17 +187,12 @@ $endif$
   \end{mdframed}%
 }
 
-% Tight list support (Pandoc generates this)
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
 % ---------------------------------------------------------------------------
-% Syntax highlighting (code blocks with a language identifier)
+% Syntax highlighting
 % ---------------------------------------------------------------------------
-% Pandoc wraps highlighted code in Shaded + Highlighting environments and
-% uses token commands (\KeywordTok, \StringTok, etc.) for coloring.
-% These must be defined here because the custom template replaces Pandoc's
-% default definitions.
 \usepackage{fancyvrb}
 \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
 \newenvironment{Shaded}{%
@@ -311,7 +238,6 @@ $endif$
 \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
 \newcommand{\NormalTok}[1]{#1}
 
-% Scale images that are too wide
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \makeatother
@@ -323,14 +249,9 @@ $endif$
 \begin{document}
 
 % --- Title page / header block (loaded from titlepage.tex) ---
-% Pass Pandoc variables into LaTeX commands so titlepage.tex stays pure LaTeX
 \newcommand{\doctitle}{$title$}
 \newcommand{\docauthor}{$author$}
-$if(auto-date)$
-\newcommand{\docdate}{\today}
-$else$
 \newcommand{\docdate}{$date$}
-$endif$
 $if(version)$
 \newcommand{\docversion}{$version$}
 $endif$
@@ -340,13 +261,11 @@ $endif$
 $if(disclaimer)$
 \newcommand{\docdisclaimer}{$disclaimer$}
 $endif$
-% Title page layout controls (from master.yaml)
 \newcommand{\doclogowidth}{$if(logo-width)$$logo-width$$else$0.8$endif$}
 \newcommand{\doctppostrule}{$if(titlepage-post-rule)$$titlepage-post-rule$$else$2em$endif$}
 \newcommand{\doctpposttitle}{$if(titlepage-post-title)$$titlepage-post-title$$else$0.75em$endif$}
 \newcommand{\doctppostauthor}{$if(titlepage-post-author)$$titlepage-post-author$$else$0.5em$endif$}
 \newcommand{\doctppostdate}{$if(titlepage-post-date)$$titlepage-post-date$$else$3em$endif$}
-% Short-form toggle + banner height
 $if(short-form)$
 \newcommand{\docshortform}{}
 $endif$

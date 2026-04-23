@@ -1,7 +1,7 @@
 % ─────────────────────────────────────────────────────────────
-% SimpleDoc v1.1.0 — Title Page / Header Block
-% https://YOUR_MARKETPLACE_URL
-% Copyright (c) 2026 Jeremiah Clark. All rights reserved.
+% Simple Doc Lite v1.1.0 — Title Page / Header Block
+% https://github.com/YOUR_GITHUB/simple-doc
+% Copyright (c) 2025 Jeremiah Clark. MIT License.
 % ─────────────────────────────────────────────────────────────
 % titlepage.tex — Two layouts, selected by short-form: in master.yaml.
 %
@@ -18,8 +18,6 @@
 \ifdefined\docshortform
   % ══════════════════════════════════════════════════════════
   % SHORT-FORM: header block at top of page 1
-  % Compact branding that occupies roughly the top half of page 1,
-  % body content flows directly beneath. Disclaimer is suppressed.
   % ══════════════════════════════════════════════════════════
   \thispagestyle{firstpage}
 
@@ -60,7 +58,6 @@
   \begin{titlepage}
     \thispagestyle{empty}
 
-    % Version stamp — top-right corner
     \ifdefined\docversion
       \begin{flushright}
         \vspace*{-2.5em}
@@ -94,7 +91,6 @@
         \docdisclaimer
         \end{important}
       \fi
-
     \end{center}
   \end{titlepage}
 \fi

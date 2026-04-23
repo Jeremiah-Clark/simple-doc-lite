@@ -1,7 +1,7 @@
 -- ─────────────────────────────────────────────────────────────
--- SimpleDoc v1.1.0 — Lua Filter
--- https://YOUR_MARKETPLACE_URL
--- Copyright (c) 2026 Jeremiah Clark. All rights reserved.
+-- Simple Doc Lite v1.1.0 — Lua Filter
+-- https://github.com/YOUR_GITHUB/simple-doc
+-- Copyright (c) 2025 Jeremiah Clark. MIT License.
 -- ─────────────────────────────────────────────────────────────
 -- gfm-to-latex.lua
 -- Bridges GitHub-Flavored Markdown features to LaTeX for PDF generation.
@@ -14,7 +14,6 @@
 --   1. GFM admonitions (> [!WARNING], > [!TIP], etc.) → LaTeX mdframed environments
 --   2. Images — centered, width-constrained, and height-constrained to fit the page
 --   3. Page breaks before level-1 headings (skipped for the first H1 in short-form)
---      and level-2 headings (optional)
 --   4. Proportional table column widths
 --   5. Keep colon-ending paragraphs with the following block
 
@@ -111,21 +110,16 @@ function Image(el)
 end
 
 -- ---------------------------------------------------------------------------
--- 3. Page breaks before headings
+-- 3. Page breaks before H1 headings
 -- ---------------------------------------------------------------------------
 -- \newpage before H1 — each major section starts on a fresh page.
 --   Exception: in short-form mode, the FIRST H1 does not force a page break,
 --   so it can flow directly beneath the header block on page 1.
--- \clearpage before H2 — optional, controlled by h2-page-break in master.yaml.
 
-local h2_page_break = false
 local short_form    = false
 local first_h1_seen = false
 
 function Meta(meta)
-  if meta["h2-page-break"] then
-    h2_page_break = meta["h2-page-break"]
-  end
   if meta["short-form"] then
     short_form = meta["short-form"]
   end
@@ -139,12 +133,6 @@ function Header(el)
     end
     return {
       pandoc.RawBlock("latex", "\\newpage"),
-      el,
-    }
-  end
-  if el.level == 2 and h2_page_break then
-    return {
-      pandoc.RawBlock("latex", "\\clearpage"),
       el,
     }
   end
