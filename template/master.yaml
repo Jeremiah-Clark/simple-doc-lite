@@ -105,4 +105,6 @@ color-note: "blue"
 color-warning: "orange"
 color-tip: "green"
 color-caution: "yellow"
+color-summary: "violet"
+color-example: "black"
 ---
