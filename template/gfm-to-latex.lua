@@ -26,6 +26,8 @@ local admonition_map = {
   TIP       = "tip",
   IMPORTANT = "important",
   CAUTION   = "caution",
+  SUMMARY   = "summary",
+  EXAMPLE   = "example",
 }
 
 function BlockQuote(el)
