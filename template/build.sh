@@ -1,6 +1,6 @@
 #!/bin/bash
 # ─────────────────────────────────────────────────────────────
-# Simple Doc Lite v1.1.1 — Build Script
+# Simple Doc Lite v1.1.2 — Build Script
 # Converts Markdown files into a styled PDF via Pandoc + XeLaTeX.
 # ─────────────────────────────────────────────────────────────
 
@@ -10,12 +10,12 @@ set -euo pipefail
 
 # EDIT BELOW TO MATCH YOUR PROJECT:
 
-OUTPUT="output.pdf"
+OUTPUT="../output.pdf"
 
 # List your Markdown content files below, in reading order.
 INPUT_FILES=(
-  content/01-introduction.md
-  content/02-main-body.md
+  ../content/01-introduction.md
+  ../content/02-main-body.md
   # Add more files here, one per line
 )
 

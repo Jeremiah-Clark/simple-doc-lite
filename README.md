@@ -1,4 +1,4 @@
-# Simple Doc Lite v1.1.1
+# Simple Doc Lite v1.1.2
 
 A free, open-source Markdown-to-PDF template. Write in plain Markdown, configure in a single YAML file, run a build script, get a polished PDF. No LaTeX knowledge required.
 

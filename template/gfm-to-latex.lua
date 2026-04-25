@@ -1,5 +1,5 @@
 -- ─────────────────────────────────────────────────────────────
--- Simple Doc Lite v1.1.1 — Lua Filter
+-- Simple Doc Lite v1.1.2 — Lua Filter
 -- https://github.com/YOUR_GITHUB/simple-doc
 -- Copyright (c) 2025 Jeremiah Clark. MIT License.
 -- ─────────────────────────────────────────────────────────────
@@ -214,3 +214,24 @@ function Pandoc(doc)
   doc.blocks = new_blocks
   return doc
 end
+
+-- ---------------------------------------------------------------------------
+-- Filter ordering
+-- ---------------------------------------------------------------------------
+-- Pandoc applies filter tables in order. We need Meta to run BEFORE any
+-- block-level handlers, so they can read the short-form / h2-page-break
+-- flags. Without this explicit ordering, Pandoc may process Headers before
+-- Meta, leaving the flags at their initial false values.
+
+return {
+  { Meta = Meta },
+  {
+    BlockQuote = BlockQuote,
+    Figure     = Figure,
+    Para       = Para,
+    Image      = Image,
+    Header     = Header,
+    Table      = Table,
+    Pandoc     = Pandoc,
+  },
+}
