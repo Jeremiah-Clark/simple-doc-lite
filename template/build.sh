@@ -1,6 +1,6 @@
 #!/bin/bash
 # ─────────────────────────────────────────────────────────────
-# Simple Doc Lite v1.1.0 — Build Script
+# Simple Doc Lite v1.1.1 — Build Script
 # Converts Markdown files into a styled PDF via Pandoc + XeLaTeX.
 # ─────────────────────────────────────────────────────────────
 

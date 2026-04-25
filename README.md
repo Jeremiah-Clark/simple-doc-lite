@@ -1,4 +1,4 @@
-# Simple Doc Lite v1.1.0
+# Simple Doc Lite v1.1.1
 
 A free, open-source Markdown-to-PDF template. Write in plain Markdown, configure in a single YAML file, run a build script, get a polished PDF. No LaTeX knowledge required.
 
@@ -93,7 +93,7 @@ Available types: `NOTE`, `TIP`, `WARNING`, `IMPORTANT`, `CAUTION`, `SUMMARY`, `E
 
 **Code blocks** — fenced with optional language tag for syntax highlighting.
 
-**Page breaks** — every `#` H1 starts a new page automatically (except the first H1 in short-form). Use `\newpage` for a manual break.
+**Page breaks** — every `#` H1 starts a new page automatically. Exception: in short-form mode, H1s do *not* force page breaks (so a multi-section memo flows continuously). Use `\newpage` for a manual break.
 
 ---
 

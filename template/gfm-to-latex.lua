@@ -1,5 +1,5 @@
 -- ─────────────────────────────────────────────────────────────
--- Simple Doc Lite v1.1.0 — Lua Filter
+-- Simple Doc Lite v1.1.1 — Lua Filter
 -- https://github.com/YOUR_GITHUB/simple-doc
 -- Copyright (c) 2025 Jeremiah Clark. MIT License.
 -- ─────────────────────────────────────────────────────────────
@@ -13,7 +13,7 @@
 -- Handles:
 --   1. GFM admonitions (> [!WARNING], > [!TIP], etc.) → LaTeX mdframed environments
 --   2. Images — centered, width-constrained, and height-constrained to fit the page
---   3. Page breaks before level-1 headings (skipped for the first H1 in short-form)
+--   3. Page breaks before level-1 headings (suppressed entirely in short-form)
 --   4. Proportional table column widths
 --   5. Keep colon-ending paragraphs with the following block
 
@@ -113,11 +113,13 @@ end
 -- 3. Page breaks before H1 headings
 -- ---------------------------------------------------------------------------
 -- \newpage before H1 — each major section starts on a fresh page.
---   Exception: in short-form mode, the FIRST H1 does not force a page break,
---   so it can flow directly beneath the header block on page 1.
+--   Exception: in short-form mode, NO H1 forces a page break. The first H1
+--   flows beneath the header block on page 1, and subsequent H1s flow
+--   inline as the document continues — appropriate for short documents
+--   (memos, letters, briefs) where forcing page breaks per H1 would
+--   produce awkwardly fragmented output.
 
-local short_form    = false
-local first_h1_seen = false
+local short_form = false
 
 function Meta(meta)
   if meta["short-form"] then
@@ -127,8 +129,7 @@ end
 
 function Header(el)
   if el.level == 1 then
-    if short_form and not first_h1_seen then
-      first_h1_seen = true
+    if short_form then
       return el
     end
     return {
