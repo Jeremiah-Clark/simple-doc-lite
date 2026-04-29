@@ -194,6 +194,7 @@
 % Syntax highlighting
 % ---------------------------------------------------------------------------
 \usepackage{fancyvrb}
+\usepackage{fvextra}   % extends fancyvrb with breaklines support
 \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
 \newenvironment{Shaded}{%
   \begin{mdframed}[
@@ -205,6 +206,24 @@
   ]%
 }{%
   \end{mdframed}%
+}
+% Plain code blocks (no language tag) — same box as Shaded, with line wrapping
+\makeatletter
+\renewenvironment{verbatim}
+  {\begin{mdframed}[%
+      linewidth=0pt, roundcorner=2mm,%
+      backgroundcolor=black!4,%
+      innertopmargin=8pt, innerbottommargin=8pt,%
+      innerleftmargin=10pt, innerrightmargin=10pt,%
+      skipabove=6pt, skipbelow=6pt%
+    ]\VerbatimEnvironment\begin{Verbatim}[breaklines=true, breakanywhere=true]}
+  {\end{Verbatim}\end{mdframed}}
+\makeatother
+
+% Inline code — monospace with subtle background and padding
+\let\oldtexttt\texttt
+\renewcommand{\texttt}[1]{%
+  {\setlength{\fboxsep}{2pt}\colorbox{black!6}{\oldtexttt{#1}}}%
 }
 \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
 \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
