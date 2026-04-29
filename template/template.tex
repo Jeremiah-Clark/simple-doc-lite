@@ -209,15 +209,19 @@
 }
 % Plain code blocks (no language tag) — same box as Shaded, with line wrapping
 \makeatletter
-\renewenvironment{verbatim}
-  {\begin{mdframed}[%
-      linewidth=0pt, roundcorner=2mm,%
-      backgroundcolor=black!4,%
-      innertopmargin=8pt, innerbottommargin=8pt,%
-      innerleftmargin=10pt, innerrightmargin=10pt,%
-      skipabove=6pt, skipbelow=6pt%
-    ]\VerbatimEnvironment\begin{Verbatim}[breaklines=true, breakanywhere=true]}
-  {\end{Verbatim}\end{mdframed}}
+% Plain code blocks — redefine verbatim using fancyvrb (handles catcodes correctly)
+% then wrap with mdframed (surroundwithmdframed is specifically designed for verbatim)
+\DefineVerbatimEnvironment{verbatim}{Verbatim}{%
+  breaklines=true,%
+  breakanywhere=true%
+}
+\surroundwithmdframed[%
+  linewidth=0pt, roundcorner=2mm,%
+  backgroundcolor=black!4,%
+  innertopmargin=8pt, innerbottommargin=8pt,%
+  innerleftmargin=10pt, innerrightmargin=10pt,%
+  skipabove=6pt, skipbelow=6pt%
+]{verbatim}
 \makeatother
 
 % Inline code — monospace with subtle background and padding
