@@ -31,21 +31,24 @@
   {\noindent\color{black!50}\rule{\linewidth}{0.4pt}}
   \vspace{0.35em}
 
-  \noindent
-  \begin{minipage}[t]{0.68\linewidth}
-    \vspace{0pt}
-    {\LARGE\sffamily\bfseries\color{brandblue} \doctitle}\\[0.45em]
-    {\sffamily \docauthor}
-  \end{minipage}%
-  \hfill
-  \begin{minipage}[t]{0.30\linewidth}
-    \vspace{0pt}
-    \raggedleft
-    {\sffamily \docdate}%
-    \ifdefined\docversion
-      \\[0.3em]{\sffamily\color{black!60} v\docversion}%
-    \fi
-  \end{minipage}
+{\noindent\LARGE\sffamily\bfseries\color{brandblue} \doctitle}
+
+\vspace{0.4em}
+
+\noindent
+\begin{minipage}[t]{0.60\linewidth}
+  \vspace{0pt}
+  {\sffamily \docauthor}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.38\linewidth}
+  \vspace{0pt}
+  \raggedleft
+  {\sffamily \docdate}%
+  \ifdefined\docversion
+    \quad{\sffamily\color{black!60} v\docversion}%
+  \fi
+\end{minipage}
 
   \vspace{0.45em}
   {\noindent\color{black!50}\rule{\linewidth}{0.4pt}}
