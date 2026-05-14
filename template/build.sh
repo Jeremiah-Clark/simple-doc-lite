@@ -88,7 +88,7 @@ fi
 echo ""
 echo "Building PDF..."
 
-pandoc --from gfm-alerts \
+pandoc --from markdown+raw_tex+autolink_bare_uris \
        --metadata-file master.yaml \
        --template template.tex \
        --pdf-engine=xelatex \
