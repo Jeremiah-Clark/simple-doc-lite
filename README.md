@@ -130,7 +130,7 @@ Callout colors (`color-note`, `color-tip`, etc.) accept LaTeX color names: `red`
 
 **"pandoc: Unknown reader: gfm-alerts"** — Your Pandoc is too old. Update to 3.0+.
 
-**Callouts rendering as plain blockquotes** — Make sure `build.sh` uses `--from gfm-alerts`.
+**Callouts rendering as plain blockquotes** — Make sure `build.sh` uses `--from markdown+raw_tex+autolink_bare_uris`.
 
 **Permission denied on build.sh** — `chmod +x build.sh`
 

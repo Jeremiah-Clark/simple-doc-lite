@@ -35,6 +35,9 @@ Before running:
   5. Edit master.yaml with your document metadata
 
 Then run:  ./build.sh
+
+Raw LaTeX in your Markdown is supported — use \begin{center}, \textit{},
+etc. directly in your .md files and they will render in the PDF.
 EOF
   exit 0
 fi

@@ -12,7 +12,7 @@
 % Core packages
 % ---------------------------------------------------------------------------
 \PassOptionsToPackage{unicode}{hyperref}
-\PassOptionsToPackage{hyphens}{url}   % allow URL breaks at hyphens
+\PassOptionsToPackage{hyphens}{url}    % allow URL line breaks at hyphens
 
 \usepackage[%
   $if(papersize)$$papersize$paper,$endif$%
@@ -85,7 +85,7 @@
 \newcommand{\st}[1]{\sout{#1}}
 
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
-\usepackage{xurl}   % allow URL breaks at more characters (/, ., -, _, etc.)
+\usepackage{xurl}   % allow URL line breaks at /, ., -, _, etc. (load after hyperref)
 \urlstyle{same}
 \hypersetup{
   unicode=true,
@@ -211,8 +211,6 @@
 }
 % Plain code blocks (no language tag) — same box as Shaded, with line wrapping
 \makeatletter
-% Plain code blocks — redefine verbatim using fancyvrb (handles catcodes correctly)
-% then wrap with mdframed (surroundwithmdframed is specifically designed for verbatim)
 \DefineVerbatimEnvironment{verbatim}{Verbatim}{%
   breaklines=true,%
   breakanywhere=true%
