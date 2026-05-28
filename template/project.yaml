@@ -1,0 +1,64 @@
+# Simple Doc Lite — Project Configuration
+# Only fields listed here override master.yaml defaults.
+# Delete any line you don't need — master.yaml fills in the rest.
+---
+
+# ── Build settings ───────────────────────────────────────────
+output: "../output.pdf"
+
+input-files:
+  - ../content/01-introduction.md
+  - ../content/02-main-body.md
+  # - ../content/03-appendix.md
+
+# ── Document metadata ────────────────────────────────────────
+title:   "Title"
+author:  "Author"
+date:    "YYYY-MM-DD"
+version: ""
+subject: ""
+keywords:
+  - keyword
+
+# ── Layout ──────────────────────────────────────────────────
+short-form: false          # true = compact page-1 header; false = full title page
+# short-form-image-height: "2.2in"
+
+# ── Logo ────────────────────────────────────────────────────
+logo: images/logo.png
+
+# ── Cover / title page ──────────────────────────────────────
+# disclaimer: "Confidential. Do not distribute."
+# logo-width: "0.8"
+
+# ── Navigation ──────────────────────────────────────────────
+toc: true
+# toc-depth: 2
+# secnumdepth: 2
+
+# ── Page size & margins ─────────────────────────────────────
+# papersize: letter        # letter / a4
+# fontsize: 11pt
+# margin: "1in"
+# margin-top: "1.25in"
+# margin-bottom: "1.25in"
+
+# ── Fonts ───────────────────────────────────────────────────
+# font-body:    "Noto Sans"
+# font-heading: "Noto Sans"
+# font-mono:    "Noto Sans Mono"
+# linespread: "1.25"
+
+# ── Colors ──────────────────────────────────────────────────
+# color-heading: "25,55,120"   # R,G,B (0–255)
+# color-link:    "40,80,180"
+
+# ── Callout colors ──────────────────────────────────────────
+# color-important: "red"
+# color-note:      "blue"
+# color-warning:   "orange"
+# color-tip:       "green"
+# color-caution:   "yellow"
+# color-summary:   "violet"
+# color-example:   "black"
+---

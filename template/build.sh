@@ -2,45 +2,72 @@
 # ─────────────────────────────────────────────────────────────
 # Simple Doc Lite v1.1.2 — Build Script
 # Converts Markdown files into a styled PDF via Pandoc + XeLaTeX.
+#
+# All project settings live in project.yaml (or a named config).
+# This script requires no edits — just point it at a config file.
+#
+# Usage:
+#   ./build.sh                        → uses project.yaml
+#   ./build.sh client-acme.yaml       → uses a named config
+#   ./build.sh configs/draft-v2.yaml  → supports subdirectory configs
 # ─────────────────────────────────────────────────────────────
 
 set -euo pipefail
 
-# ── Configuration ────────────────────────────────────────────
+# ── Config file ──────────────────────────────────────────────
+CONFIG="${1:-project.yaml}"
 
-# EDIT BELOW TO MATCH YOUR PROJECT:
-
-OUTPUT="../output.pdf"
-
-# List your Markdown content files below, in reading order.
-INPUT_FILES=(
-  ../content/01-introduction.md
-  ../content/02-main-body.md
-  # Add more files here, one per line
-)
-
-# DO NOT EDIT BELOW THIS LINE  ──────────────────────────────────
-
+# ── Help ─────────────────────────────────────────────────────
 if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
-  cat <<'EOF'
+  cat <<'HELP'
 Simple Doc Lite — Build Script
 
-Usage:  ./build.sh [--help]
+Usage:  ./build.sh [config-file] [--help]
 
-Before running:
-  1. Install Pandoc 3.0+     → https://pandoc.org/installing.html
-  2. Install a TeX distro    → TeX Live (Linux/macOS) or MiKTeX (Windows)
-  3. Install Noto Sans fonts (see README)
-  4. Edit the INPUT_FILES list at the top of this script
-  5. Edit master.yaml with your document metadata
+Arguments:
+  config-file   Path to a YAML config file (default: project.yaml).
+                Overrides values from master.yaml — only include
+                fields you want to change.
 
-Then run:  ./build.sh
+Examples:
+  ./build.sh                         Use project.yaml (default)
+  ./build.sh client-acme.yaml        Use a named config
+  ./build.sh configs/draft-v2.yaml   Use a config in a subdirectory
 
-Raw LaTeX in your Markdown is supported — use \begin{center}, \textit{},
-etc. directly in your .md files and they will render in the PDF.
-EOF
+The output path and input file list are read from the config file
+(output: and input-files: fields). See project.yaml for reference.
+HELP
   exit 0
 fi
+
+# ── Read output path and input files from config ─────────────
+_parse_output() {
+  awk '/^output:/{
+    sub(/^output:[[:space:]]*/, "")
+    sub(/#.*$/, "")
+    sub(/^[[:space:]]*/, ""); sub(/[[:space:]]*$/, "")
+    gsub(/^["'"'"']|["'"'"']$/, "")
+    if (length($0) > 0) print
+  }' "$1"
+}
+
+_parse_inputs() {
+  awk '
+    /^input-files:/ { f=1; next }
+    f && /^[[:space:]]+-/ {
+      line=$0
+      sub(/^[[:space:]]+-[[:space:]]*/, "", line)
+      sub(/#.*$/, "", line)
+      sub(/[[:space:]]*$/, "", line)
+      sub(/^"/, "", line); sub(/"$/, "", line)
+      sub(/^'"'"'/, "", line); sub(/'"'"'$/, "", line)
+      if (length(line) > 0) print line
+    }
+    f && /^[^[:space:]]/ { exit }
+  ' "$1"
+}
+
+# ── Pre-flight checks ────────────────────────────────────────
 
 errors=0
 
@@ -69,17 +96,41 @@ for f in master.yaml template.tex gfm-to-latex.lua; do
   fi
 done
 
-if [[ ${#INPUT_FILES[@]} -eq 0 ]]; then
-  echo "ERROR: No input files listed."
-  echo "       Edit the INPUT_FILES array at the top of build.sh."
+if [[ ! -f "$CONFIG" ]]; then
+  echo "ERROR: Config file not found: $CONFIG"
+  if [[ "$CONFIG" == "project.yaml" ]]; then
+    echo "       Create a project.yaml in this directory, or pass a config"
+    echo "       file as an argument:  ./build.sh my-config.yaml"
+  else
+    echo "       Check the path and filename."
+  fi
   errors=1
 else
-  for f in "${INPUT_FILES[@]}"; do
-    if [[ ! -f "$f" ]]; then
-      echo "ERROR: Input file not found: $f"
-      errors=1
-    fi
-  done
+  echo "  Using config: $CONFIG"
+
+  OUTPUT=$(_parse_output "$CONFIG")
+  OUTPUT="${OUTPUT:-../output.pdf}"
+
+  INPUT_FILES=()
+  while IFS= read -r line; do
+    [[ -n "$line" ]] && INPUT_FILES+=("$line")
+  done < <(_parse_inputs "$CONFIG")
+fi
+
+if [[ $errors -eq 0 ]]; then
+  if [[ ${#INPUT_FILES[@]} -eq 0 ]]; then
+    echo "ERROR: No input files listed in $CONFIG."
+    echo "       Add an input-files: list to your config."
+    errors=1
+  else
+    for f in "${INPUT_FILES[@]}"; do
+      if [[ ! -f "$f" ]]; then
+        echo "ERROR: Input file not found: $f"
+        echo "       Check the path in the input-files: list in $CONFIG."
+        errors=1
+      fi
+    done
+  fi
 fi
 
 if [[ $errors -ne 0 ]]; then
@@ -89,10 +140,12 @@ if [[ $errors -ne 0 ]]; then
 fi
 
 echo ""
-echo "Building PDF..."
+echo "Building PDF → $OUTPUT"
 
-pandoc --from markdown+raw_tex+autolink_bare_uris \
+# master.yaml supplies defaults; CONFIG overrides only what you've set.
+pandoc --from gfm-alerts \
        --metadata-file master.yaml \
+       --metadata-file "$CONFIG" \
        --template template.tex \
        --pdf-engine=xelatex \
        --lua-filter gfm-to-latex.lua \
