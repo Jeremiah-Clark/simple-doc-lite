@@ -25,20 +25,29 @@ my-project/
 ├── titlepage.tex
 ├── gfm-to-latex.lua
 ├── build.sh
-├── master.yaml
+├── master.yaml        ← template defaults (no need to edit this)
+├── project.yaml       ← your project config (edit this)
 ├── content/
 │   └── 01-introduction.md
 └── images/
     └── logo.png
 ```
 
-### 3. Configure `master.yaml`
+### 3. Configure `project.yaml`
 
 ```yaml
-title: "My Document"
+output: "../output.pdf"
+
+input-files:
+  - content/01-introduction.md
+  - content/02-main-body.md
+
+title:  "My Document"
 author: "Your Name"
-date: "2025-06-15"
+date:   "2025-06-15"
 ```
+
+`project.yaml` only needs the fields you want to set or change. `master.yaml` supplies defaults for everything else — you don't need to touch it.
 
 ### 4. Build
 
@@ -47,7 +56,11 @@ chmod +x build.sh
 ./build.sh
 ```
 
-Your PDF appears as `output.pdf`.
+Your PDF appears at the path you set in `output:`. To use a different config file:
+
+```bash
+./build.sh configs/client-acme.yaml
+```
 
 ---
 
@@ -95,28 +108,41 @@ Available types: `NOTE`, `TIP`, `WARNING`, `IMPORTANT`, `CAUTION`, `SUMMARY`, `E
 
 **Page breaks** — every `#` H1 starts a new page automatically. Exception: in short-form mode, H1s do *not* force page breaks (so a multi-section memo flows continuously). Use `\newpage` for a manual break.
 
+**Multi-file documents** — list files in order under `input-files:` in your `project.yaml`:
+
+```yaml
+input-files:
+  - content/01-introduction.md
+  - content/02-methodology.md
+  - content/03-conclusion.md
+```
+
 ---
 
 ## Core configuration
 
-| Field                     | Default       | Description                        |
-|---------------------------|---------------|------------------------------------|
-| `title`, `author`, `date` | —             | Document metadata                  |
-| `version`                 | *(empty)*     | Version string on title page       |
-| `short-form`              | `false`       | Compact page-1 header vs full title page |
-| `short-form-image-height` | `2.2in`       | Max banner height in short-form    |
-| `logo`                    | *(empty)*     | Path to logo image                 |
-| `disclaimer`              | *(empty)*     | Disclaimer box (long-form only)    |
-| `toc`                     | `true`        | Show table of contents             |
-| `toc-depth`               | `2`           | TOC heading levels (1–6)           |
-| `secnumdepth`             | `2`           | Section numbering depth            |
-| `papersize`               | `letter`      | `letter` or `a4`                   |
-| `fontsize`                | `11pt`        | Base font size                     |
-| `font-body`               | `Noto Sans`   | Body text font                     |
-| `font-heading`            | `Noto Sans`   | Heading font                       |
-| `font-mono`               | `Noto Sans Mono` | Monospace font                  |
-| `color-heading`           | `25,55,120`   | Heading color, R,G,B               |
-| `color-link`              | `40,80,180`   | Link color, R,G,B                  |
+All settings go in `project.yaml`. Every field is optional except `output` and `input-files`.
+
+| Field                     | Default          | Description                        |
+|---------------------------|------------------|------------------------------------|
+| `output`                  | `../output.pdf`  | Output PDF path                    |
+| `input-files`             | *(required)*     | Ordered list of Markdown files     |
+| `title`, `author`, `date` | —                | Document metadata                  |
+| `version`                 | *(empty)*        | Version string on title page       |
+| `short-form`              | `false`          | Compact page-1 header vs full title page |
+| `short-form-image-height` | `2.2in`          | Max banner height in short-form    |
+| `logo`                    | *(empty)*        | Path to logo image                 |
+| `disclaimer`              | *(empty)*        | Disclaimer box (long-form only)    |
+| `toc`                     | `true`           | Show table of contents             |
+| `toc-depth`               | `2`              | TOC heading levels (1–6)           |
+| `secnumdepth`             | `2`              | Section numbering depth            |
+| `papersize`               | `letter`         | `letter` or `a4`                   |
+| `fontsize`                | `11pt`           | Base font size                     |
+| `font-body`               | `Noto Sans`      | Body text font                     |
+| `font-heading`            | `Noto Sans`      | Heading font                       |
+| `font-mono`               | `Noto Sans Mono` | Monospace font                     |
+| `color-heading`           | `25,55,120`      | Heading color, R,G,B               |
+| `color-link`              | `40,80,180`      | Link color, R,G,B                  |
 
 Callout colors (`color-note`, `color-tip`, etc.) accept LaTeX color names: `red`, `blue`, `green`, `orange`, `yellow`, `violet`, `black`, `gray`.
 
@@ -124,13 +150,17 @@ Callout colors (`color-note`, `color-tip`, etc.) accept LaTeX color names: `red`
 
 ## Troubleshooting
 
+**"Config file not found: project.yaml"** — Create a `project.yaml` in your project directory (use the included one as a starting point), or pass a config file explicitly: `./build.sh my-config.yaml`
+
+**"No input files listed"** — Make sure your `project.yaml` has an `input-files:` list with at least one file.
+
 **"Font not found"** — Install Noto Sans (see Quick Start). Check what's installed with `fc-list | grep -i noto`.
 
 **"xelatex not found"** — Install a TeX distribution.
 
 **"pandoc: Unknown reader: gfm-alerts"** — Your Pandoc is too old. Update to 3.0+.
 
-**Callouts rendering as plain blockquotes** — Make sure `build.sh` uses `--from markdown+raw_tex+autolink_bare_uris`.
+**Callouts rendering as plain blockquotes** — Make sure `build.sh` uses `--from gfm-alerts`.
 
 **Permission denied on build.sh** — `chmod +x build.sh`
 
