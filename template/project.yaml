@@ -1,59 +1,94 @@
 # Simple Doc Lite — Project Configuration
-# Only fields listed here override master.yaml defaults.
-# Delete any line you don't need — master.yaml fills in the rest.
+# Override only the fields you need. master.yaml supplies all defaults.
+# ─────────────────────────────────────────────────────────────
 ---
 
-# ── Build settings ───────────────────────────────────────────
-output: "../output.pdf"
+# ── BUILD SETTINGS ───────────────────────────────────────────
 
+output: "../output.pdf"
 input-files:
   - ../content/01-introduction.md
   - ../content/02-main-body.md
-  # - ../content/03-appendix.md
+  - ../content/03-appendix.md
 
-# ── Document metadata ────────────────────────────────────────
+# ── DOCUMENT METADATA ────────────────────────────────────────
+
 title:   "Title"
 author:  "Author"
 date:    "YYYY-MM-DD"
 version: ""
 subject: ""
-keywords:
-  - keyword
+# keywords:
+#   - keyword
 
-# ── Layout ──────────────────────────────────────────────────
+# ── LAYOUT ──────────────────────────────────────────────────
+
 short-form: false          # true = compact page-1 header; false = full title page
 # short-form-image-height: "2.2in"
 
-# ── Logo ────────────────────────────────────────────────────
-logo: images/logo.png
+# ── LOGO ────────────────────────────────────────────────────
+# Path to your logo image. Delete or comment out this line for no logo.
+# Long-form: square/portrait, ~1500×1500 px. Short-form: landscape banner, ~2000×600 px.
 
-# ── Cover / title page ──────────────────────────────────────
-# disclaimer: "Confidential. Do not distribute."
-# logo-width: "0.8"
+# logo: ../images/logo.png
 
-# ── Navigation ──────────────────────────────────────────────
+# ── COVER DISCLAIMER (long-form only) ───────────────────────
+# Appears in a box at the bottom of the title page.
+# Delete or comment out this line to hide the disclaimer box.
+
+# disclaimer: "All information contained herein is confidential."
+
+# ── NAVIGATION ──────────────────────────────────────────────
+
 toc: true
 # toc-depth: 2
-# secnumdepth: 2
+# secnumdepth: 2            # 0 = none, 1 = H1, 2 = H1+H2, 3 = H1+H2+H3
 
-# ── Page size & margins ─────────────────────────────────────
-# papersize: letter        # letter / a4
+# ── PAGE SIZE ───────────────────────────────────────────────
+
+# papersize: letter          # letter / a4
 # fontsize: 11pt
-# margin: "1in"
+
+# ── MARGINS ─────────────────────────────────────────────────
+
+# margin: "1in"              # left and right
 # margin-top: "1.25in"
 # margin-bottom: "1.25in"
 
-# ── Fonts ───────────────────────────────────────────────────
+# ── HEADER & FOOTER GEOMETRY ─────────────────────────────────
+
+# headheight: "14pt"         # height of the header box
+# headsep: "12pt"            # gap between header rule and body text
+# footskip: "30pt"           # distance from body bottom to footer baseline
+
+# ── HEADER & FOOTER RULES ────────────────────────────────────
+
+# header-rule: "0.4pt"       # set to "0pt" to hide
+# footer-rule: "0.4pt"       # set to "0pt" to hide
+
+# ── TITLE PAGE LAYOUT (long-form only) ──────────────────────
+
+# logo-width: "0.8"          # logo width as fraction of text width (0.0–1.0)
+# titlepage-post-rule:   "2em"    # space after top rule, before title
+# titlepage-post-title:  "0.75em" # space after title, before author
+# titlepage-post-author: "0.5em"  # space after author, before date
+# titlepage-post-date:   "3em"    # space after date, before logo
+
+# ── FONTS ───────────────────────────────────────────────────
+
 # font-body:    "Noto Sans"
 # font-heading: "Noto Sans"
 # font-mono:    "Noto Sans Mono"
-# linespread: "1.25"
+# linespread: "1.25"         # 1.0 = single, 1.25 = default, 1.5 = one-and-a-half
 
-# ── Colors ──────────────────────────────────────────────────
+# ── COLORS ──────────────────────────────────────────────────
+
 # color-heading: "25,55,120"   # R,G,B (0–255)
 # color-link:    "40,80,180"
 
-# ── Callout colors ──────────────────────────────────────────
+# ── CALLOUT COLORS ──────────────────────────────────────────
+# LaTeX color names: red, blue, orange, green, yellow, violet, black, gray
+
 # color-important: "red"
 # color-note:      "blue"
 # color-warning:   "orange"
