@@ -158,9 +158,9 @@ Callout colors (`color-note`, `color-tip`, etc.) accept LaTeX color names: `red`
 
 **"xelatex not found"** — Install a TeX distribution.
 
-**"pandoc: Unknown reader: gfm-alerts"** — Your Pandoc is too old. Update to 3.0+.
+**Pandoc version errors** — Simple Doc requires Pandoc 3.0 or later. Update from [pandoc.org/installing](https://pandoc.org/installing.html).
 
-**Callouts rendering as plain blockquotes** — Make sure `build.sh` uses `--from gfm-alerts`.
+**Callouts rendering as plain blockquotes** — Make sure `build.sh` uses `--from markdown+raw_tex+autolink_bare_uris`. Using `--from gfm` causes Pandoc to natively parse alerts before the Lua filter can handle them.
 
 **Permission denied on build.sh** — `chmod +x build.sh`
 

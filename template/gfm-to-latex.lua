@@ -6,9 +6,11 @@
 -- gfm-to-latex.lua
 -- Bridges GitHub-Flavored Markdown features to LaTeX for PDF generation.
 --
--- IMPORTANT: build.sh must use --from gfm-alerts (not --from gfm) so that
--- Pandoc does NOT natively parse GFM alerts. This keeps them as BlockQuotes,
--- allowing this filter to convert them into our custom LaTeX environments.
+-- IMPORTANT: build.sh must use --from markdown+raw_tex+autolink_bare_uris.
+-- The markdown reader does not natively parse GFM alerts, so callouts remain
+-- as BlockQuotes for this filter to convert into styled LaTeX environments.
+-- raw_tex enables inline/block LaTeX passthrough (\newpage, \begin{center},
+-- etc.) in content files. autolink_bare_uris restores bare URL autolinking.
 --
 -- Handles:
 --   1. GFM admonitions (> [!WARNING], > [!TIP], etc.) → LaTeX mdframed environments

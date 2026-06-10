@@ -143,7 +143,7 @@ echo ""
 echo "Building PDF → $OUTPUT"
 
 # master.yaml supplies defaults; CONFIG overrides only what you've set.
-pandoc --from gfm-alerts \
+pandoc --from markdown+raw_tex+autolink_bare_uris \
        --metadata-file master.yaml \
        --metadata-file "$CONFIG" \
        --template template.tex \
