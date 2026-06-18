@@ -39,7 +39,7 @@ function BlockQuote(el)
   if first_block.t ~= "Para" then return el end
 
   local first_text = pandoc.utils.stringify(first_block)
-  local admonition_type = first_text:match("^%[!(%u+)%]")
+  local admonition_type = first_text:upper():match("^%[!(%u+)%]")
 
   if not admonition_type then return el end
 
