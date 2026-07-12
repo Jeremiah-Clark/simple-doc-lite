@@ -39,23 +39,60 @@
 % ---------------------------------------------------------------------------
 % Font setup (XeLaTeX / LuaLaTeX)
 % ---------------------------------------------------------------------------
-% Lite version uses a single font per slot — set font-body, font-heading,
-% and font-mono in master.yaml. Defaults to Noto Sans / Noto Sans Mono.
+% Each slot is set from master.yaml (font-body, font-heading, font-mono).
+% If a requested font isn't installed, the build falls back to Latin Modern
+% (shipped with every TeX distribution) instead of failing, and a console
+% message is printed so you know what happened.
 \usepackage{ifxetex,ifluatex}
 \usepackage{newunicodechar}
-\ifxetex
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi>0
   \usepackage{fontspec}
-  \setmainfont{$if(font-body)$$font-body$$else$Noto Sans$endif$}
-  \setsansfont{$if(font-heading)$$font-heading$$else$Noto Sans$endif$}
-  \setmonofont{$if(font-mono)$$font-mono$$else$Noto Sans Mono$endif$}[Scale=MatchLowercase]
+
+  % Last-resort faces from Latin Modern, which ships with every TeX
+  % distribution. Loaded by file name so they resolve even where TeX's
+  % fonts aren't registered with the OS font system (e.g. macOS).
+  \newcommand{\simpledocsansfallback}[1]{%
+    #1{lmsans10-regular.otf}[
+      BoldFont=lmsans10-bold.otf,
+      ItalicFont=lmsans10-oblique.otf,
+      BoldItalicFont=lmsans10-boldoblique.otf]}
+  \newcommand{\simpledocmonofallback}{%
+    \setmonofont{lmmono10-regular.otf}[
+      ItalicFont=lmmono10-italic.otf,
+      BoldFont=lmmonolt10-bold.otf,
+      BoldItalicFont=lmmonolt10-boldoblique.otf,
+      Scale=MatchLowercase]}
+
+  % ── Body font ──
+  \IfFontExistsTF{$if(font-body)$$font-body$$else$Noto Sans$endif$}{%
+    \setmainfont{$if(font-body)$$font-body$$else$Noto Sans$endif$}%
+  }{%
+    \typeout{Simple Doc: body font "$if(font-body)$$font-body$$else$Noto Sans$endif$" not found - using Latin Modern Sans.}%
+    \simpledocsansfallback{\setmainfont}%
+  }
+
+  % ── Heading font ──
+  \IfFontExistsTF{$if(font-heading)$$font-heading$$else$Noto Sans$endif$}{%
+    \setsansfont{$if(font-heading)$$font-heading$$else$Noto Sans$endif$}%
+  }{%
+    \typeout{Simple Doc: heading font "$if(font-heading)$$font-heading$$else$Noto Sans$endif$" not found - using Latin Modern Sans.}%
+    \simpledocsansfallback{\setsansfont}%
+  }
+
+  % ── Monospace font ──
+  \IfFontExistsTF{$if(font-mono)$$font-mono$$else$Noto Sans Mono$endif$}{%
+    \setmonofont{$if(font-mono)$$font-mono$$else$Noto Sans Mono$endif$}[Scale=MatchLowercase]%
+  }{%
+    \typeout{Simple Doc: mono font "$if(font-mono)$$font-mono$$else$Noto Sans Mono$endif$" not found - using Latin Modern Mono.}%
+    \simpledocmonofallback%
+  }
+\else
+  % Non-Unicode engines (pdfLaTeX): no fontspec available. Redirect
+  % typewriter to the sans family so code doesn't fall back to bitmap
+  % ectt fonts. This must NOT run under XeLaTeX/LuaLaTeX — it would
+  % override \setmonofont and code would silently lose its mono font.
+  \renewcommand{\ttdefault}{\sfdefault}
 \fi
-\ifluatex
-  \usepackage{fontspec}
-  \setmainfont{$if(font-body)$$font-body$$else$Noto Sans$endif$}
-  \setsansfont{$if(font-heading)$$font-heading$$else$Noto Sans$endif$}
-  \setmonofont{$if(font-mono)$$font-mono$$else$Noto Sans Mono$endif$}[Scale=MatchLowercase]
-\fi
-\renewcommand{\ttdefault}{\sfdefault}
 
 \newunicodechar{‑}{-}
 

@@ -142,6 +142,12 @@ fi
 echo ""
 echo "Building PDF → $OUTPUT"
 
+# Stop kpathsea from trying to *generate* missing fonts (mktextfm etc.).
+# When a configured font isn't installed, the template detects it and falls
+# back gracefully — but without this, XeLaTeX's probe of the missing name
+# prints pages of harmless-but-scary METAFONT errors first.
+export MKTEXTFM=0 MKTEXPK=0 MKTEXMF=0
+
 # master.yaml supplies defaults; CONFIG overrides only what you've set.
 pandoc --from markdown+raw_tex+autolink_bare_uris \
        --metadata-file master.yaml \
