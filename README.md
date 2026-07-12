@@ -14,6 +14,8 @@ No LaTeX knowledge required.
 
 - **Pandoc 3.0+** — [pandoc.org/installing](https://pandoc.org/installing.html)
 - **A TeX distribution** with XeLaTeX — TeX Live (Linux/macOS) or MiKTeX (Windows)
+  - Ubuntu/Debian: `sudo apt install texlive-xetex texlive-latex-recommended texlive-latex-extra texlive-pictures texlive-plain-generic texlive-fonts-recommended lmodern`
+  - macOS: `brew install --cask mactex`
 - **Noto Sans fonts**:
   - Ubuntu/Debian: `sudo apt install fonts-noto-core fonts-noto-mono`
   - macOS: `brew install --cask font-noto-sans font-noto-sans-mono`

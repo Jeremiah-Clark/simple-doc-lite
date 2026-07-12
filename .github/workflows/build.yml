@@ -9,14 +9,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
+      # --no-install-recommends keeps the install small, so every needed
+      # package must be listed explicitly: texlive-plain-generic provides
+      # ulem.sty (strikethrough), lmodern provides the Latin Modern OTFs
+      # for the built-in font fallback, texlive-pictures provides tikz
+      # for the callout frames.
       - name: Install TeX Live and fonts
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            texlive-xetex texlive-latex-extra texlive-fonts-recommended \
-            fonts-noto-core fonts-noto-mono fontconfig
+            texlive-xetex texlive-latex-recommended texlive-latex-extra \
+            texlive-pictures texlive-plain-generic texlive-fonts-recommended \
+            lmodern fonts-noto-core fonts-noto-mono fontconfig
 
       - name: Install Pandoc 3
         run: |
