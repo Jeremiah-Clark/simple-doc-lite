@@ -41,29 +41,38 @@ HELP
 fi
 
 # ── Read output path and input files from config ─────────────
+# Quoted values keep everything between the quotes (so "#" and spaces
+# are safe); unquoted values end at a space-preceded "#" comment.
+
 _parse_output() {
   awk '/^output:/{
     sub(/^output:[[:space:]]*/, "")
-    sub(/#.*$/, "")
-    sub(/^[[:space:]]*/, ""); sub(/[[:space:]]*$/, "")
-    gsub(/^["'"'"']|["'"'"']$/, "")
-    if (length($0) > 0) print
+    if ($0 ~ /^"/)          { sub(/^"/, "");       sub(/".*$/, "") }
+    else if ($0 ~ /^'"'"'/) { sub(/^'"'"'/, "");   sub(/'"'"'.*$/, "") }
+    else                    { sub(/[[:space:]]+#.*$/, ""); sub(/[[:space:]]*$/, "") }
+    if (length($0) > 0) { print; exit }
   }' "$1"
 }
 
 _parse_inputs() {
   awk '
-    /^input-files:/ { f=1; next }
-    f && /^[[:space:]]+-/ {
-      line=$0
-      sub(/^[[:space:]]+-[[:space:]]*/, "", line)
-      sub(/#.*$/, "", line)
-      sub(/[[:space:]]*$/, "", line)
-      sub(/^"/, "", line); sub(/"$/, "", line)
-      sub(/^'"'"'/, "", line); sub(/'"'"'$/, "", line)
-      if (length(line) > 0) print line
+    /^input-files:/ { in_list=1; next }
+    in_list {
+      # blank lines and comment lines may appear between items
+      if ($0 ~ /^[[:space:]]*(#|$)/) next
+      # a list item ("- file"), indented or at column 0
+      if ($0 ~ /^[[:space:]]*-([[:space:]]|$)/) {
+        line = $0
+        sub(/^[[:space:]]*-[[:space:]]*/, "", line)
+        if (line ~ /^"/)          { sub(/^"/, "", line);     sub(/".*$/, "", line) }
+        else if (line ~ /^'"'"'/) { sub(/^'"'"'/, "", line); sub(/'"'"'.*$/, "", line) }
+        else                      { sub(/[[:space:]]+#.*$/, "", line); sub(/[[:space:]]*$/, "", line) }
+        if (length(line) > 0) print line
+        next
+      }
+      # anything else (the next key) ends the list
+      exit
     }
-    f && /^[^[:space:]]/ { exit }
   ' "$1"
 }
 
