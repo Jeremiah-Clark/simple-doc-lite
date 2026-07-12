@@ -1,6 +1,8 @@
 # Simple Doc Lite v1.2.0
 
-A free, open-source Markdown-to-PDF template. Write in plain Markdown, configure in a single YAML file, run a build script, get a polished PDF. No LaTeX knowledge required.
+A free, open-source Markdown-to-PDF template. 
+Write in plain Markdown, configure in a single YAML file, run a build script, get a polished PDF. 
+No LaTeX knowledge required.
 
 **Built on:** [Pandoc](https://pandoc.org) + XeLaTeX
 
@@ -47,7 +49,8 @@ author: "Your Name"
 date:   "2025-06-15"
 ```
 
-`project.yaml` only needs the fields you want to set or change. `master.yaml` supplies defaults for everything else — you don't need to touch it.
+`project.yaml` only needs the fields you want to set or change. 
+`master.yaml` supplies defaults for everything else — you don't need to touch it.
 
 ### 4. Build
 
@@ -56,7 +59,8 @@ chmod +x build.sh
 ./build.sh
 ```
 
-Your PDF appears at the path you set in `output:`. To use a different config file:
+Your PDF appears at the path you set in `output:`. 
+To use a different config file:
 
 ```bash
 ./build.sh configs/client-acme.yaml
@@ -114,8 +118,8 @@ small caption under the image (set `figure-captions: false` to disable):
 ![Caption](images/photo.png){ width=60% }
 ```
 
-Pixel widths (`{ width=300px }`) and percentages both work. Images that
-appear inline with text keep their natural size.
+Pixel widths (`{ width=300px }`) and percentages both work. 
+Images that appear inline with text keep their natural size.
 
 **Task lists** — `- [x]` / `- [ ]` items render with GitHub-style
 checkboxes in place of bullets.
@@ -143,31 +147,33 @@ input-files:
 
 All settings go in `project.yaml`. Every field is optional except `output` and `input-files`.
 
-| Field                     | Default          | Description                        |
-|---------------------------|------------------|------------------------------------|
-| `output`                  | `../output.pdf`  | Output PDF path                    |
-| `input-files`             | *(required)*     | Ordered list of Markdown files     |
-| `title`, `author`, `date` | —                | Document metadata                  |
-| `version`                 | *(empty)*        | Version string on title page       |
+| Field                     | Default          | Description                              |
+| ------------------------- | ---------------- | ---------------------------------------- |
+| `output`                  | `../output.pdf`  | Output PDF path                          |
+| `input-files`             | *(required)*     | Ordered list of Markdown files           |
+| `title`, `author`, `date` | —                | Document metadata                        |
+| `version`                 | *(empty)*        | Version string on title page             |
 | `short-form`              | `false`          | Compact page-1 header vs full title page |
-| `short-form-image-height` | `2.2in`          | Max banner height in short-form    |
-| `logo`                    | *(empty)*        | Path to logo image                 |
-| `disclaimer`              | *(empty)*        | Disclaimer box (long-form only)    |
-| `toc`                     | `true`           | Show table of contents             |
-| `toc-depth`               | `2`              | TOC heading levels (1–6)           |
-| `secnumdepth`             | `2`              | Section numbering depth            |
-| `figure-captions`         | `true`           | Show image alt text as captions    |
-| `papersize`               | `letter`         | `letter` or `a4`                   |
-| `fontsize`                | `11pt`           | Base font size                     |
-| `font-body`               | `Noto Sans`      | Body text font                     |
-| `font-heading`            | `Noto Sans`      | Heading font                       |
-| `font-mono`               | `Noto Sans Mono` | Monospace font                     |
-| `color-heading`           | `25,55,120`      | Heading color, R,G,B               |
-| `color-link`              | `40,80,180`      | Link color, R,G,B                  |
+| `short-form-image-height` | `2.2in`          | Max banner height in short-form          |
+| `logo`                    | *(empty)*        | Path to logo image                       |
+| `disclaimer`              | *(empty)*        | Disclaimer box (long-form only)          |
+| `toc`                     | `true`           | Show table of contents                   |
+| `toc-depth`               | `2`              | TOC heading levels (1–6)                 |
+| `secnumdepth`             | `2`              | Section numbering depth                  |
+| `figure-captions`         | `true`           | Show image alt text as captions          |
+| `papersize`               | `letter`         | `letter` or `a4`                         |
+| `fontsize`                | `11pt`           | Base font size                           |
+| `font-body`               | `Noto Sans`      | Body text font                           |
+| `font-heading`            | `Noto Sans`      | Heading font                             |
+| `font-mono`               | `Noto Sans Mono` | Monospace font                           |
+| `color-heading`           | `25,55,120`      | Heading color, R,G,B                     |
+| `color-link`              | `40,80,180`      | Link color, R,G,B                        |
 
-Callout colors (`color-note`, `color-tip`, etc.) default to a tuned palette (`sd-red`, `sd-blue`, `sd-orange`, `sd-green`, `sd-amber`, `sd-purple`, `sd-gray`) chosen for readable white title text. Plain LaTeX color names (`red`, `blue`, `green`, ...) also work.
+Callout colors (`color-note`, `color-tip`, etc.) default to a tuned palette (`sd-red`, `sd-blue`, `sd-orange`, `sd-green`, `sd-amber`, `sd-purple`, `sd-gray`) chosen for readable white title text. 
+Plain LaTeX color names (`red`, `blue`, `green`, ...) also work.
 
-**Fonts and languages** — if a configured font isn't installed, the build doesn't fail: it falls back to Latin Modern (bundled with every TeX distribution) and prints a console note. For non-Latin scripts (Cyrillic, Greek, CJK, ...), set `font-body` to a font that covers your script — characters a font doesn't cover can't appear in the PDF. `lang:` (e.g. `en-US`, `de-DE`) controls hyphenation.
+**Fonts and languages** — if a configured font isn't installed, the build doesn't fail: it falls back to Latin Modern (bundled with every TeX distribution) and prints a console note. 
+For non-Latin scripts (Cyrillic, Greek, CJK, ...), set `font-body` to a font that covers your script — characters a font doesn't cover can't appear in the PDF. `lang:` (e.g., `en-US`, `de-DE`) controls hyphenation.
 
 ---
 
@@ -177,13 +183,16 @@ Callout colors (`color-note`, `color-tip`, etc.) default to a tuned palette (`sd
 
 **"No input files listed"** — Make sure your `project.yaml` has an `input-files:` list with at least one file.
 
-**"Font not found" console note** — the build still succeeds using Latin Modern; install Noto Sans (see Quick Start) to get the intended look. Check what's installed with `fc-list | grep -i noto`, or run `./build.sh --check`.
+**"Font not found" console note** — the build still succeeds using Latin Modern; install Noto Sans (see Quick Start) to get the intended look. 
+Check what's installed with `fc-list | grep -i noto`, or run `./build.sh --check`.
 
 **"xelatex not found"** — Install a TeX distribution.
 
-**Pandoc version errors** — Simple Doc requires Pandoc 3.0 or later. Update from [pandoc.org/installing](https://pandoc.org/installing.html).
+**Pandoc version errors** — Simple Doc requires Pandoc 3.0 or later. 
+Update from [pandoc.org/installing](https://pandoc.org/installing.html).
 
-**Callouts rendering as plain blockquotes** — Make sure `build.sh` uses `--from markdown+raw_tex+autolink_bare_uris`. Using `--from gfm` causes Pandoc to natively parse alerts before the Lua filter can handle them.
+**Callouts rendering as plain blockquotes** — Make sure `build.sh` uses `--from markdown+raw_tex+autolink_bare_uris`. 
+Using `--from gfm` causes Pandoc to natively parse alerts before the Lua filter can handle them.
 
 **Permission denied on build.sh** — `chmod +x build.sh`
 
@@ -191,7 +200,8 @@ Callout colors (`color-note`, `color-tip`, etc.) default to a tuned palette (`sd
 
 ## Upgrade to Simple Doc Pro
 
-This Lite version covers everything you need for most documents. If you want the following features, check out **[Simple Doc Pro](YOUR_GUMROAD_URL)**:
+This Lite version covers everything you need for most documents. 
+If you want the following features, check out **[Simple Doc Pro](YOUR_GUMROAD_URL)**:
 
 - **Watermarks** — "DRAFT", "CONFIDENTIAL", or any text, angled across every page
 - **Page X of Y** — total page count in the footer
