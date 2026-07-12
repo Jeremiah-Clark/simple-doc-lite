@@ -1,5 +1,5 @@
 -- ─────────────────────────────────────────────────────────────
--- Simple Doc Lite v1.1.2 — Lua Filter
+-- Simple Doc Lite v1.2.0 — Lua Filter
 -- https://github.com/YOUR_GITHUB/simple-doc
 -- Copyright (c) 2025 Jeremiah Clark. MIT License.
 -- ─────────────────────────────────────────────────────────────

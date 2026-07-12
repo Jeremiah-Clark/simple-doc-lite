@@ -1,6 +1,6 @@
 #!/bin/bash
 # ─────────────────────────────────────────────────────────────
-# Simple Doc Lite v1.1.2 — Build Script
+# Simple Doc Lite v1.2.0 — Build Script
 # Converts Markdown files into a styled PDF via Pandoc + XeLaTeX.
 #
 # All project settings live in project.yaml (or a named config).
@@ -15,6 +15,11 @@
 # ─────────────────────────────────────────────────────────────
 
 set -euo pipefail
+
+# Where the template assets (template.tex, master.yaml, the Lua filter)
+# live. Defaults to the current directory; wrapper scripts can point it
+# elsewhere, e.g.  TEMPLATE_DIR=../template ./build.sh
+TEMPLATE_DIR="${TEMPLATE_DIR:-.}"
 
 # ── Arguments ────────────────────────────────────────────────
 CONFIG="project.yaml"
@@ -84,7 +89,7 @@ _parse_scalar() {  # _parse_scalar <key> <file>
 _effective() {
   local v
   v=$(_parse_scalar "$1" "$CONFIG")
-  [[ -n "$v" ]] || v=$(_parse_scalar "$1" master.yaml)
+  [[ -n "$v" ]] || v=$(_parse_scalar "$1" "$TEMPLATE_DIR/master.yaml")
   printf '%s\n' "$v"
 }
 
@@ -138,9 +143,9 @@ else
   echo "  Found xelatex"
 fi
 
-for f in master.yaml template.tex gfm-to-latex.lua; do
-  if [[ ! -f "$f" ]]; then
-    echo "ERROR: Required template file not found: $f"
+for f in master.yaml template.tex titlepage.tex gfm-to-latex.lua; do
+  if [[ ! -f "$TEMPLATE_DIR/$f" ]]; then
+    echo "ERROR: Required template file not found: $TEMPLATE_DIR/$f"
     errors=1
   fi
 done
@@ -239,17 +244,21 @@ mkdir -p "$outdir"
 # prints pages of harmless-but-scary METAFONT errors first.
 export MKTEXTFM=0 MKTEXPK=0 MKTEXMF=0
 
+# TEXINPUTS lets XeLaTeX find titlepage.tex (referenced by \input{} in
+# template.tex) when the template lives in another directory.
+export TEXINPUTS="$TEMPLATE_DIR:${TEXINPUTS:-}"
+
 # master.yaml supplies defaults; CONFIG overrides only what you've set.
 # --resource-path lets images be found relative to the config file and
 # the project root as well as the current directory.
 LOG="$outdir/build.log"
 build_status=0
 pandoc --from markdown+raw_tex+autolink_bare_uris \
-       --metadata-file master.yaml \
+       --metadata-file "$TEMPLATE_DIR/master.yaml" \
        --metadata-file "$CONFIG" \
-       --template template.tex \
+       --template "$TEMPLATE_DIR/template.tex" \
        --pdf-engine=xelatex \
-       --lua-filter gfm-to-latex.lua \
+       --lua-filter "$TEMPLATE_DIR/gfm-to-latex.lua" \
        --resource-path=".:$(dirname "$CONFIG"):.." \
        "${INPUT_FILES[@]}" \
        -o "$OUTPUT" >"$LOG" 2>&1 || build_status=$?

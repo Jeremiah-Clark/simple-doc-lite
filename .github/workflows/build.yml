@@ -1,0 +1,35 @@
+name: Build PDF
+
+on:
+  push:
+    branches: [main, lite]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install TeX Live and fonts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-xetex texlive-latex-extra texlive-fonts-recommended \
+            fonts-noto-core fonts-noto-mono fontconfig
+
+      - name: Install Pandoc 3
+        run: |
+          curl -sL -o /tmp/pandoc.deb \
+            https://github.com/jgm/pandoc/releases/download/3.6.3/pandoc-3.6.3-1-amd64.deb
+          sudo dpkg -i /tmp/pandoc.deb
+          pandoc --version | head -1
+
+      - name: Pre-flight check
+        run: cd template && bash build.sh --check
+
+      - name: Build the starter project
+        run: cd template && bash build.sh
+
+      - name: Verify the PDF was produced
+        run: test -s output.pdf
