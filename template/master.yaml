@@ -10,8 +10,7 @@ title: "Title"
 author: "Author"
 date: "Date"
 version: ""
-keywords:
-  - keywords
+# keywords and subject flow into the PDF's metadata when set in project.yaml
 subject: ""
 lang: en-US
 
@@ -63,4 +62,5 @@ color-tip: "green"
 color-caution: "yellow"
 color-summary: "violet"
 color-example: "black"
+color-disclaimer: "gray"   # title-page disclaimer box (long-form only)
 ---

@@ -100,14 +100,52 @@ function BlockQuote(el)
 end
 
 -- ---------------------------------------------------------------------------
+-- 1b. Long inline code → breakable (template's boxed style can't wrap)
+-- ---------------------------------------------------------------------------
+-- Short snippets keep the boxed inline-code style from template.tex.
+-- Anything long enough to risk overflowing the line is emitted through
+-- \simpledoclongcode (unboxed), with break points allowed after common
+-- separators so paths and options can wrap instead of running into the
+-- margin.
+
+local LONG_CODE_THRESHOLD = 50
+
+function Code(el)
+  if #el.text <= LONG_CODE_THRESHOLD then return nil end
+  if el.attr and #el.attr.classes > 0 then return nil end
+
+  -- Render through the writer so escaping matches Pandoc's own \texttt output
+  local latex = pandoc.write(pandoc.Pandoc({ pandoc.Plain({ el }) }), "latex")
+  latex = latex:gsub("%s*\n%s*", " "):gsub("^%s+", ""):gsub("%s+$", "")
+  local inner = latex:match("^\\texttt{(.*)}$")
+  if not inner then return nil end
+
+  -- Allow breaks after separators (never touching escape sequences,
+  -- which all start with a backslash).
+  inner = inner:gsub("([/%.,=:;])", "%1\\allowbreak{}")
+
+  return pandoc.RawInline("latex", "\\simpledoclongcode{" .. inner .. "}")
+end
+
+-- ---------------------------------------------------------------------------
 -- 2. Images — centered, width- and height-constrained
 -- ---------------------------------------------------------------------------
+local function image_width_to_latex(width_str)
+  local pct = width_str:match("^(%d+%.?%d*)%%$")
+  if pct then
+    return string.format("%.2f\\linewidth", tonumber(pct) / 100)
+  end
+  -- Pixel widths ("300px") and unitless HTML-style numbers ("300") have
+  -- no LaTeX unit and would abort the build; convert at the usual 96 dpi.
+  local px = width_str:match("^(%d+%.?%d*)px$") or width_str:match("^(%d+%.?%d*)$")
+  if px then
+    return string.format("%.3fin", tonumber(px) / 96)
+  end
+  return width_str
+end
+
 local function make_includegraphics(src, width_str)
-  local pct = width_str:match("^(%d+)%%$")
-  local latex_width = pct
-    and string.format("%.2f\\linewidth", tonumber(pct) / 100)
-    or width_str
-  return "\\includegraphics[width=" .. latex_width
+  return "\\includegraphics[width=" .. image_width_to_latex(width_str)
     .. ",height=0.82\\textheight,keepaspectratio]{" .. src .. "}"
 end
 
@@ -138,12 +176,11 @@ function Para(el)
   end
 end
 
-function Image(el)
-  if not el.attributes.width and not el.attributes.height then
-    el.attributes.width = "80%"
-  end
-  return el
-end
+-- NOTE: standalone images (their own paragraph or figure) get the 80%
+-- default from the Figure/Para handlers above. Images that appear inline
+-- with text, in list items, or in table cells keep their natural size
+-- (capped at the line width by template.tex) — a blanket width would blow
+-- small inline icons up to 80% of the page.
 
 -- ---------------------------------------------------------------------------
 -- 3. Page breaks before H1 headings
@@ -157,10 +194,18 @@ end
 
 local short_form = false
 
+-- YAML booleans arrive as real booleans, but users sometimes quote them
+-- ("false") — treat the usual false-y spellings as false instead of
+-- silently enabling the feature.
+local function truthy(v)
+  if v == nil or v == false then return false end
+  if v == true then return true end
+  local s = pandoc.utils.stringify(v):lower()
+  return not (s == "false" or s == "no" or s == "off" or s == "0" or s == "")
+end
+
 function Meta(meta)
-  if meta["short-form"] then
-    short_form = meta["short-form"]
-  end
+  short_form = truthy(meta["short-form"])
 end
 
 function Header(el)
@@ -202,6 +247,13 @@ local function col_content_lengths(el)
   return max_lens
 end
 
+-- Tables that already fit are left at their natural size — stretching a
+-- two-column "A | B" table across the whole page looks broken. Only
+-- tables whose content would overflow the text width get proportional
+-- p{} column widths. ~80 characters of single-line content roughly
+-- fills the text width at the default font size.
+local TABLE_CHAR_BUDGET = 80
+
 function Table(el)
   local n = #el.colspecs
   if n == 0 then return el end
@@ -211,22 +263,26 @@ function Table(el)
     total = total + (spec[2] or 0)
   end
 
-  local widths
-  if total < 0.01 then
-    local lens = col_content_lengths(el)
-    local sum = 0
-    for _, l in ipairs(lens) do sum = sum + l end
-    widths = {}
-    for i, l in ipairs(lens) do widths[i] = l / sum end
-  else
-    widths = {}
-    for i, spec in ipairs(el.colspecs) do
-      widths[i] = (spec[2] or 0) / total
+  if total >= 0.01 then
+    -- Author-supplied widths: respect them, but rein them in if they
+    -- add up to more than the full text width.
+    if total > 1.001 then
+      for i = 1, n do
+        el.colspecs[i] = { el.colspecs[i][1], (el.colspecs[i][2] or 0) / total }
+      end
     end
+    return el
+  end
+
+  local lens = col_content_lengths(el)
+  local sum = 0
+  for _, l in ipairs(lens) do sum = sum + l end
+  if sum <= TABLE_CHAR_BUDGET then
+    return el
   end
 
   for i = 1, n do
-    el.colspecs[i] = { el.colspecs[i][1], widths[i] }
+    el.colspecs[i] = { el.colspecs[i][1], lens[i] / sum }
   end
 
   return el
@@ -263,9 +319,9 @@ return {
   { Meta = Meta },
   {
     BlockQuote = BlockQuote,
+    Code       = Code,
     Figure     = Figure,
     Para       = Para,
-    Image      = Image,
     Header     = Header,
     Table      = Table,
     Pandoc     = Pandoc,
