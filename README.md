@@ -62,6 +62,17 @@ Your PDF appears at the path you set in `output:`. To use a different config fil
 ./build.sh configs/client-acme.yaml
 ```
 
+Other build options:
+
+```bash
+./build.sh --check            # verify your setup without building
+./build.sh -o drafts/v2.pdf   # build to a different output path
+```
+
+If a build fails, the full compiler output is saved to `build.log` next
+to the output PDF, and the script prints the relevant last lines plus a
+hint about the most common causes.
+
 ---
 
 ## Document layouts
@@ -96,15 +107,24 @@ Standard Markdown, plus:
 
 Available types: `NOTE`, `TIP`, `WARNING`, `IMPORTANT`, `CAUTION`, `SUMMARY`, `EXAMPLE`.
 
-**Images** — auto-centered, width-constrained:
+**Images** — auto-centered, width-constrained; the alt text renders as a
+small caption under the image (set `figure-captions: false` to disable):
 
 ```markdown
 ![Caption](images/photo.png){ width=60% }
 ```
 
-**Tables** — standard pipe tables with automatic column widths.
+Pixel widths (`{ width=300px }`) and percentages both work. Images that
+appear inline with text keep their natural size.
 
-**Code blocks** — fenced with optional language tag for syntax highlighting.
+**Task lists** — `- [x]` / `- [ ]` items render with GitHub-style
+checkboxes in place of bullets.
+
+**Tables** — standard pipe tables. Small tables keep their natural
+size; wide tables get proportional column widths so they never overflow.
+
+**Code blocks** — fenced with optional language tag for syntax
+highlighting. Long lines wrap inside the shaded box.
 
 **Page breaks** — every `#` H1 starts a new page automatically. Exception: in short-form mode, H1s do *not* force page breaks (so a multi-section memo flows continuously). Use `\newpage` for a manual break.
 
@@ -136,6 +156,7 @@ All settings go in `project.yaml`. Every field is optional except `output` and `
 | `toc`                     | `true`           | Show table of contents             |
 | `toc-depth`               | `2`              | TOC heading levels (1–6)           |
 | `secnumdepth`             | `2`              | Section numbering depth            |
+| `figure-captions`         | `true`           | Show image alt text as captions    |
 | `papersize`               | `letter`         | `letter` or `a4`                   |
 | `fontsize`                | `11pt`           | Base font size                     |
 | `font-body`               | `Noto Sans`      | Body text font                     |
@@ -144,7 +165,9 @@ All settings go in `project.yaml`. Every field is optional except `output` and `
 | `color-heading`           | `25,55,120`      | Heading color, R,G,B               |
 | `color-link`              | `40,80,180`      | Link color, R,G,B                  |
 
-Callout colors (`color-note`, `color-tip`, etc.) accept LaTeX color names: `red`, `blue`, `green`, `orange`, `yellow`, `violet`, `black`, `gray`.
+Callout colors (`color-note`, `color-tip`, etc.) default to a tuned palette (`sd-red`, `sd-blue`, `sd-orange`, `sd-green`, `sd-amber`, `sd-purple`, `sd-gray`) chosen for readable white title text. Plain LaTeX color names (`red`, `blue`, `green`, ...) also work.
+
+**Fonts and languages** — if a configured font isn't installed, the build doesn't fail: it falls back to Latin Modern (bundled with every TeX distribution) and prints a console note. For non-Latin scripts (Cyrillic, Greek, CJK, ...), set `font-body` to a font that covers your script — characters a font doesn't cover can't appear in the PDF. `lang:` (e.g. `en-US`, `de-DE`) controls hyphenation.
 
 ---
 
@@ -154,7 +177,7 @@ Callout colors (`color-note`, `color-tip`, etc.) accept LaTeX color names: `red`
 
 **"No input files listed"** — Make sure your `project.yaml` has an `input-files:` list with at least one file.
 
-**"Font not found"** — Install Noto Sans (see Quick Start). Check what's installed with `fc-list | grep -i noto`.
+**"Font not found" console note** — the build still succeeds using Latin Modern; install Noto Sans (see Quick Start) to get the intended look. Check what's installed with `fc-list | grep -i noto`, or run `./build.sh --check`.
 
 **"xelatex not found"** — Install a TeX distribution.
 

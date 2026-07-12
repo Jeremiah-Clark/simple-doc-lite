@@ -24,12 +24,21 @@
 *.orig
 
 ## Word/Excel temp files
+# (patterns must not carry trailing comments — Git treats the whole
+# line as the pattern)
 
 ~$*
-*.wbk         # Word backup
-*.xlk         # Excel backup
-*.tmp         # Office temp
-*.lock        # File lock indicators
+# Word backup
+*.wbk
+# Excel backup
+*.xlk
+# File lock indicators
+*.lock
+
+## Build artifacts
+
+build.log
+output.pdf
 
 ## Affinity autosave/backup (safe to ignore)
 

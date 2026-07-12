@@ -43,6 +43,7 @@ short-form: false          # true = compact page-1 header; false = full title pa
 toc: true
 # toc-depth: 2
 # secnumdepth: 2            # 0 = none, 1 = H1, 2 = H1+H2, 3 = H1+H2+H3
+# figure-captions: true     # false = don't show image alt text as captions
 
 # ── PAGE SIZE ───────────────────────────────────────────────
 
@@ -87,13 +88,16 @@ toc: true
 # color-link:    "40,80,180"
 
 # ── CALLOUT COLORS ──────────────────────────────────────────
-# LaTeX color names: red, blue, orange, green, yellow, violet, black, gray
+# Defaults are the tuned sd-* palette (sd-red, sd-blue, sd-orange,
+# sd-green, sd-amber, sd-purple, sd-gray). Plain LaTeX color names
+# (red, blue, orange, ...) also work.
 
-# color-important: "red"
-# color-note:      "blue"
-# color-warning:   "orange"
-# color-tip:       "green"
-# color-caution:   "yellow"
-# color-summary:   "violet"
-# color-example:   "black"
+# color-important: "sd-red"
+# color-note:      "sd-blue"
+# color-warning:   "sd-orange"
+# color-tip:       "sd-green"
+# color-caution:   "sd-amber"
+# color-summary:   "sd-purple"
+# color-example:   "sd-gray"
+# color-disclaimer: "sd-gray"   # title-page disclaimer box
 ---
