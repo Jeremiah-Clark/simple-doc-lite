@@ -32,30 +32,64 @@ local admonition_map = {
   EXAMPLE   = "example",
 }
 
+-- Render title inlines through the LaTeX writer so special characters
+-- (& % # _ ...) arrive escaped instead of breaking the build.
+local function inlines_to_latex(inlines)
+  local latex = pandoc.write(pandoc.Pandoc({ pandoc.Plain(inlines) }), "latex")
+  return latex:gsub("%s*\n%s*", " "):gsub("^%s+", ""):gsub("%s+$", "")
+end
+
 function BlockQuote(el)
   if #el.content == 0 then return el end
 
   local first_block = el.content[1]
   if first_block.t ~= "Para" then return el end
 
-  local first_text = pandoc.utils.stringify(first_block)
-  local admonition_type = first_text:upper():match("^%[!(%u+)%]")
+  local inlines = first_block.content
+  local first = inlines[1]
+  if not first or first.t ~= "Str" then return el end
 
+  -- The marker must be the first word of the quote: [!TYPE] (any case)
+  local admonition_type = first.text:match("^%[!(%a+)%]$")
   if not admonition_type then return el end
 
-  local env_name = admonition_map[admonition_type]
+  local env_name = admonition_map[admonition_type:upper()]
   if not env_name then return el end
 
-  local custom_title = first_text:match("^%[!%u+%]%s+(.+)$")
+  -- Split the rest of the first paragraph at the first line break.
+  -- Inlines before the break form an optional custom title; inlines after
+  -- it are body content — the standard GFM form
+  --   > [!NOTE]
+  --   > Body text.
+  -- parses as ONE paragraph with a SoftBreak after the marker, so the
+  -- body must not be mistaken for a title.
+  local title_inlines = pandoc.List()
+  local body_inlines  = pandoc.List()
+  local past_break = false
+  for i = 2, #inlines do
+    local inline = inlines[i]
+    if not past_break and (inline.t == "SoftBreak" or inline.t == "LineBreak") then
+      past_break = true
+    elseif past_break then
+      body_inlines:insert(inline)
+    elseif not (inline.t == "Space" and #title_inlines == 0) then
+      title_inlines:insert(inline)
+    end
+  end
 
   local new_content = pandoc.List()
+  if #body_inlines > 0 then
+    new_content:insert(pandoc.Para(body_inlines))
+  end
   for i = 2, #el.content do
     new_content:insert(el.content[i])
   end
 
   local result = pandoc.List()
-  if custom_title and custom_title ~= "" then
-    result:insert(pandoc.RawBlock("latex", "\\begin{" .. env_name .. "}[" .. custom_title .. "]"))
+  if #title_inlines > 0 then
+    -- Braces keep a "]" in the title from ending the optional argument.
+    result:insert(pandoc.RawBlock("latex",
+      "\\begin{" .. env_name .. "}[{" .. inlines_to_latex(title_inlines) .. "}]"))
   else
     result:insert(pandoc.RawBlock("latex", "\\begin{" .. env_name .. "}"))
   end
