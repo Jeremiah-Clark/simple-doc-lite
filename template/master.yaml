@@ -22,6 +22,7 @@ short-form-image-height: "2.2in"
 toc: true
 toc-depth: 2
 secnumdepth: 2
+figure-captions: true      # show image alt text as a caption under the image
 
 # PDF settings
 fontsize: 11pt
@@ -54,13 +55,15 @@ linespread: "1.25"
 color-heading: "25,55,120"
 color-link: "40,80,180"
 
-# Callout colors
-color-important: "red"
-color-note: "blue"
-color-warning: "orange"
-color-tip: "green"
-color-caution: "yellow"
-color-summary: "violet"
-color-example: "black"
-color-disclaimer: "gray"   # title-page disclaimer box (long-form only)
+# Callout colors — the sd-* names are tuned for readable white title
+# text and clean pale backgrounds; plain LaTeX color names (red, blue,
+# orange, ...) also work.
+color-important: "sd-red"
+color-note: "sd-blue"
+color-warning: "sd-orange"
+color-tip: "sd-green"
+color-caution: "sd-amber"
+color-summary: "sd-purple"
+color-example: "sd-gray"
+color-disclaimer: "sd-gray"   # title-page disclaimer box (long-form only)
 ---

@@ -149,17 +149,29 @@ local function make_includegraphics(src, width_str)
     .. ",height=0.82\\textheight,keepaspectratio]{" .. src .. "}"
 end
 
+local figure_captions = true   -- set from Meta (figure-captions:)
+
 function Figure(el)
   local img = el.content[1]
   if img and img.t == "Plain" then
     local inner = img.content[1]
     if inner and inner.t == "Image" then
       local width = inner.attributes.width or "80%"
-      return {
+      local blocks = pandoc.List({
         pandoc.RawBlock("latex", "\\begin{center}"),
         pandoc.RawBlock("latex", make_includegraphics(inner.src, width)),
-        pandoc.RawBlock("latex", "\\end{center}"),
-      }
+      })
+      -- The alt text becomes a small, muted caption under the image
+      -- (disable with figure-captions: false).
+      if figure_captions and el.caption and el.caption.long then
+        local cap = pandoc.utils.blocks_to_inlines(el.caption.long)
+        if #cap > 0 then
+          blocks:insert(pandoc.RawBlock("latex",
+            "{\\small\\color{black!60} " .. inlines_to_latex(cap) .. "}"))
+        end
+      end
+      blocks:insert(pandoc.RawBlock("latex", "\\end{center}"))
+      return blocks
     end
   end
 end
@@ -206,6 +218,63 @@ end
 
 function Meta(meta)
   short_form = truthy(meta["short-form"])
+  if meta["figure-captions"] ~= nil then
+    figure_captions = truthy(meta["figure-captions"])
+  end
+end
+
+-- ---------------------------------------------------------------------------
+-- 3b. Task-list checkboxes
+-- ---------------------------------------------------------------------------
+-- GFM task lists arrive as ☒/☐ characters; most fonts lack the glyphs and
+-- the default LaTeX mapping renders a harsh "boxed times". Map them to the
+-- styled checkboxes defined in template.tex.
+
+function Str(el)
+  if el.text == "☒" then return pandoc.RawInline("latex", "\\sdtaskdone{}") end
+  if el.text == "☐" then return pandoc.RawInline("latex", "\\sdtaskopen{}") end
+end
+
+-- When EVERY item in a bullet list is a task item, drop the bullets and
+-- let the checkboxes stand as the item labels (GitHub-style). Mixed
+-- lists keep their bullets with inline checkboxes.
+-- (Inline handlers run first, so the markers are already RawInlines.)
+local function task_mark(inline)
+  if inline and inline.t == "RawInline" and inline.format == "latex" then
+    if inline.text == "\\sdtaskdone{}" then return "\\sdtaskdone{}" end
+    if inline.text == "\\sdtaskopen{}" then return "\\sdtaskopen{}" end
+  end
+  return nil
+end
+
+function BulletList(el)
+  local marks = {}
+  for i, item in ipairs(el.content) do
+    local first = item[1]
+    if first and (first.t == "Plain" or first.t == "Para")
+       and task_mark(first.content[1]) then
+      marks[i] = task_mark(first.content[1])
+    else
+      return nil
+    end
+  end
+
+  local out = pandoc.List()
+  out:insert(pandoc.RawBlock("latex",
+    "\\begin{itemize}[label={},leftmargin=2.4em,labelsep=0.6em]"))
+  for i, item in ipairs(el.content) do
+    out:insert(pandoc.RawBlock("latex", "\\item[" .. marks[i] .. "]"))
+    local blocks = pandoc.List(item)
+    local first_inlines = pandoc.List(blocks[1].content)
+    first_inlines:remove(1)
+    if first_inlines[1] and first_inlines[1].t == "Space" then
+      first_inlines:remove(1)
+    end
+    blocks[1] = pandoc.Plain(first_inlines)
+    out:extend(blocks)
+  end
+  out:insert(pandoc.RawBlock("latex", "\\end{itemize}"))
+  return out
 end
 
 function Header(el)
@@ -319,10 +388,12 @@ return {
   { Meta = Meta },
   {
     BlockQuote = BlockQuote,
+    BulletList = BulletList,
     Code       = Code,
     Figure     = Figure,
     Para       = Para,
     Header     = Header,
+    Str        = Str,
     Table      = Table,
     Pandoc     = Pandoc,
   },

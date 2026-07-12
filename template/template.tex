@@ -96,6 +96,11 @@
 
 \newunicodechar{‑}{-}
 
+% Language-aware hyphenation and typography, derived from lang:
+$if(babel-lang)$
+\usepackage[$babel-lang$]{babel}
+$endif$
+
 \linespread{$if(linespread)$$linespread$$else$1.25$endif$}
 
 % ---------------------------------------------------------------------------
@@ -103,6 +108,18 @@
 % ---------------------------------------------------------------------------
 \definecolor{brandblue}{RGB}{$if(color-heading)$$color-heading$$else$25,55,120$endif$}
 \definecolor{linkblue}{RGB}{$if(color-link)$$color-link$$else$40,80,180$endif$}
+
+% Tuned callout base colors — darker than the LaTeX primaries so white
+% title text stays readable and the pale backgrounds derive cleanly.
+% master.yaml references these by name; plain LaTeX color names
+% (red, blue, ...) still work in the color-* fields.
+\definecolor{sd-red}{HTML}{CF222E}
+\definecolor{sd-blue}{HTML}{0969DA}
+\definecolor{sd-orange}{HTML}{BC4C00}
+\definecolor{sd-green}{HTML}{1A7F37}
+\definecolor{sd-amber}{HTML}{9A6700}
+\definecolor{sd-purple}{HTML}{8250DF}
+\definecolor{sd-gray}{HTML}{57606A}
 
 % ---------------------------------------------------------------------------
 % Page break quality
@@ -227,6 +244,8 @@ $endif$
 % ---------------------------------------------------------------------------
 % Callout / admonition environments
 % ---------------------------------------------------------------------------
+% Callouts may break across pages (a callout taller than the page would
+% otherwise overflow and lose content); mdframed keeps short ones intact.
 \newcommand{\definecallout}[3]{%
   \newenvironment{#1}[1][#2]{%
     \begin{mdframed}[
@@ -234,7 +253,8 @@ $endif$
       linewidth=2pt, roundcorner=2mm,
       innertopmargin=10pt, innerbottommargin=10pt,
       innerleftmargin=10pt, innerrightmargin=10pt,
-      skipabove=9pt, skipbelow=6pt, nobreak=true,
+      skipabove=9pt, skipbelow=6pt,
+      splittopskip=1.2\baselineskip, splitbottomskip=6pt,
       frametitle=##1, frametitlebackgroundcolor=#3!80!black,
       frametitlefont=\bfseries\color{white},
       frametitleaboveskip=4pt, frametitlebelowskip=5pt
@@ -253,20 +273,30 @@ $endif$
 % re-theming the "important" callout, and doesn't carry that label.
 \definecallout{disclaimerbox}{Disclaimer}{$if(color-disclaimer)$$color-disclaimer$$else$gray$endif$}
 
+% Plain blockquotes: classic left rule with slightly muted text, clearly
+% distinct from the framed callout boxes. May break across pages.
 \renewenvironment{quote}{%
   \begin{mdframed}[
-    linecolor=black!40, backgroundcolor=black!0,
-    linewidth=2pt, roundcorner=2mm,
-    innertopmargin=10pt, innerbottommargin=10pt,
-    innerleftmargin=10pt, innerrightmargin=10pt,
-    skipabove=9pt, skipbelow=4pt, nobreak=true
-  ]%
+    topline=false, bottomline=false, rightline=false,
+    linecolor=black!30, linewidth=3pt,
+    backgroundcolor=white,
+    innertopmargin=6pt, innerbottommargin=6pt,
+    innerleftmargin=12pt, innerrightmargin=4pt,
+    skipabove=8pt, skipbelow=8pt
+  ]\color{black!70}%
 }{%
   \end{mdframed}%
 }
 
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% Task-list checkboxes (the Lua filter maps GFM's ☒/☐ to these):
+% a green check in a box for done, an empty box for open.
+\newcommand{\sdtaskdone}{{\setlength{\fboxsep}{1.5pt}%
+  \fcolorbox{sd-green}{sd-green}{\color{white}\scriptsize\raisebox{0.1ex}{\checkmark}}}}
+\newcommand{\sdtaskopen}{{\setlength{\fboxsep}{1.5pt}%
+  \fcolorbox{black!40}{white}{\scriptsize\raisebox{0.1ex}{\phantom{\checkmark}}}}}
 
 % ---------------------------------------------------------------------------
 % Syntax highlighting
