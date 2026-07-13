@@ -131,6 +131,14 @@ $endif$
 \hyphenpenalty=200
 \exhyphenpenalty=200
 \raggedbottom
+% Prefer slightly looser lines over text running into the margin —
+% without these, an unbreakable inline-code chip that lands near the
+% end of a line overflows the page edge instead of moving to the next
+% line. tolerance raises the cap on how loose a line may get when
+% needed (good breaks are still preferred when they exist), and
+% emergencystretch adds a final allowance before TeX gives up.
+\tolerance=2000
+\setlength{\emergencystretch}{3em}
 
 % ---------------------------------------------------------------------------
 % Hyperref (must be loaded after fontspec)
@@ -341,10 +349,20 @@ $endif$
 \renewcommand{\texttt}[1]{%
   {\setlength{\fboxsep}{2pt}\colorbox{black!6}{\oldtexttt{#1}}}%
 }
-% Long inline code (emitted by the Lua filter): the colorbox above can't
-% break across lines, so snippets that wouldn't fit are set unboxed and
-% may wrap at the break points the filter inserts.
-\newcommand{\simpledoclongcode}[1]{{\oldtexttt{#1}}}
+% Mid-length and long inline code (emitted by the Lua filter): measured
+% against the CURRENT line width, so the same snippet keeps its chip in
+% body text but is set unboxed — free to wrap at spaces and at the
+% break points the filter inserts — where the line is narrow (callouts,
+% lists) or the snippet is simply too wide for a chip.
+\newcommand{\simpledocsmartcode}[1]{%
+  \begingroup
+  \sbox0{\oldtexttt{#1}}%
+  \ifdim\wd0>0.5\linewidth
+    {\oldtexttt{#1}}%
+  \else
+    {\setlength{\fboxsep}{2pt}\colorbox{black!6}{\usebox0}}%
+  \fi
+  \endgroup}
 \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
 \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
 \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}

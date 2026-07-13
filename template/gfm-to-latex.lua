@@ -100,18 +100,20 @@ function BlockQuote(el)
 end
 
 -- ---------------------------------------------------------------------------
--- 1b. Long inline code → breakable (template's boxed style can't wrap)
+-- 1b. Mid-length and long inline code → width-aware (chips can't wrap)
 -- ---------------------------------------------------------------------------
--- Short snippets keep the boxed inline-code style from template.tex.
--- Anything long enough to risk overflowing the line is emitted through
--- \simpledoclongcode (unboxed), with break points allowed after common
--- separators so paths and options can wrap instead of running into the
--- margin.
+-- Short snippets always keep the boxed inline-code style from
+-- template.tex. Anything long enough to risk crowding a line goes
+-- through \simpledocsmartcode, which measures the snippet against the
+-- current line width at typesetting time: it stays a chip where it fits
+-- comfortably and is set unboxed (breakable at spaces and after common
+-- separators) where the line is narrow — callouts, lists — or the
+-- snippet is simply too wide.
 
-local LONG_CODE_THRESHOLD = 50
+local SMART_CODE_THRESHOLD = 30
 
 function Code(el)
-  if #el.text <= LONG_CODE_THRESHOLD then return nil end
+  if #el.text <= SMART_CODE_THRESHOLD then return nil end
   if el.attr and #el.attr.classes > 0 then return nil end
 
   -- Render through the writer so escaping matches Pandoc's own \texttt output
@@ -124,7 +126,7 @@ function Code(el)
   -- which all start with a backslash).
   inner = inner:gsub("([/%.,=:;])", "%1\\allowbreak{}")
 
-  return pandoc.RawInline("latex", "\\simpledoclongcode{" .. inner .. "}")
+  return pandoc.RawInline("latex", "\\simpledocsmartcode{" .. inner .. "}")
 end
 
 -- ---------------------------------------------------------------------------
