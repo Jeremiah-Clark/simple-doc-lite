@@ -358,11 +358,32 @@ function Table(el)
 end
 
 -- ---------------------------------------------------------------------------
--- 5. Keep colon-ending paragraphs with the following block
+-- 5. Whole-document passes
 -- ---------------------------------------------------------------------------
+-- a) Documents whose top-level heading is ## (no # anywhere — common when
+--    the title page already carries the title) are renumbered so H2s
+--    count as top-level sections: "1", "2" instead of "0.1", "0.2",
+--    with H3s as "1.1". Only the numbers change; heading styles and
+--    page flow stay the same.
+-- b) Keep colon-ending paragraphs with the block that follows them.
+
 function Pandoc(doc)
+  local has_h1, has_h2 = false, false
+  for _, block in ipairs(doc.blocks) do
+    if block.t == "Header" then
+      if block.level == 1 then has_h1 = true end
+      if block.level == 2 then has_h2 = true end
+    end
+  end
+
   local new_blocks = pandoc.List()
-  for i, block in ipairs(doc.blocks) do
+  if not has_h1 and has_h2 then
+    new_blocks:insert(pandoc.RawBlock("latex",
+      "\\renewcommand{\\thesubsection}{\\arabic{subsection}}"
+      .. "\\renewcommand{\\thesubsubsection}{\\thesubsection.\\arabic{subsubsection}}"))
+  end
+
+  for _, block in ipairs(doc.blocks) do
     new_blocks:insert(block)
     if block.t == "Para" then
       local inlines = block.content

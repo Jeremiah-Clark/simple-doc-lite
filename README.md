@@ -134,6 +134,8 @@ highlighting. Long lines wrap inside the shaded box.
 
 **Page breaks** — every `#` H1 starts a new page automatically. Exception: in short-form mode, H1s do *not* force page breaks (so a multi-section memo flows continuously). Use `\newpage` for a manual break.
 
+**Numbering without H1s** — if a document's top-level heading is `##` (no `#` anywhere — common when the title page already carries the title), H2s are numbered as top-level sections (`1`, `2`, ...) automatically instead of `0.1`, `0.2`.
+
 **Multi-file documents** — list files in order under `input-files:` in your `project.yaml`:
 
 ```yaml
