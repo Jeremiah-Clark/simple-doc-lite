@@ -199,18 +199,19 @@ if [[ $errors -eq 0 ]]; then
     echo "  NOTE: date: is still the placeholder — set it in $CONFIG."
   fi
 
-  # Font availability (informational — the template falls back to Latin
-  # Modern on its own if a font can't be loaded).
+  # Font availability (informational — the template does its own check
+  # at build time and that one decides what ends up in the PDF).
   if command -v fc-list &>/dev/null; then
-    # One family name per line, so "Noto Sans" doesn't false-match
-    # "Noto Sans Kannada".
-    installed_fonts=$(fc-list : family 2>/dev/null | tr ',' '\n' | sort -u || true)
     check_font() {
       local label="$1" font="$2"
       [[ -z "$font" ]] && return 0
-      if ! grep -qixF "$font" <<<"$installed_fonts"; then
-        echo "  NOTE: $label font \"$font\" isn't listed by fc-list."
-        echo "        If it isn't installed, the PDF falls back to Latin Modern."
+      # Query fontconfig with the name as a pattern: matches family names
+      # case-insensitively AND PostScript-style names like
+      # "NotoSansNF-Reg", without fuzzy prefixes ("Noto Sans" does not
+      # match "Noto Sans Kannada"). Empty result = not installed.
+      if [[ -z "$(fc-list "$font" 2>/dev/null | head -1)" ]]; then
+        echo "  NOTE: $label font \"$font\" isn't visible to fontconfig."
+        echo "        If XeLaTeX can't find it either, the PDF falls back to Latin Modern."
       fi
     }
     check_font "Body"    "$(_effective font-body)"
@@ -243,6 +244,8 @@ mkdir -p "$outdir"
 # back gracefully — but without this, XeLaTeX's probe of the missing name
 # prints pages of harmless-but-scary METAFONT errors first.
 export MKTEXTFM=0 MKTEXPK=0 MKTEXMF=0
+# Keep the template's console notices on one line in the log.
+export max_print_line=1000
 
 # TEXINPUTS lets XeLaTeX find titlepage.tex (referenced by \input{} in
 # template.tex) when the template lives in another directory.
