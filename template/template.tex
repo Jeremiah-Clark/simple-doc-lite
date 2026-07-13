@@ -252,8 +252,11 @@ $endif$
 % ---------------------------------------------------------------------------
 % Callout / admonition environments
 % ---------------------------------------------------------------------------
-% Callouts may break across pages (a callout taller than the page would
-% otherwise overflow and lose content); mdframed keeps short ones intact.
+% By default callouts may break across pages (a callout taller than the
+% page would otherwise overflow and lose content); mdframed keeps short
+% ones intact either way. Set callout-keep-whole: true to forbid
+% splitting — each callout then moves to the next page as one piece,
+% and one taller than a full page will overflow.
 \newcommand{\definecallout}[3]{%
   \newenvironment{#1}[1][#2]{%
     \begin{mdframed}[
@@ -262,6 +265,9 @@ $endif$
       innertopmargin=10pt, innerbottommargin=10pt,
       innerleftmargin=10pt, innerrightmargin=10pt,
       skipabove=9pt, skipbelow=6pt,
+$if(callout-keep-whole)$
+      nobreak=true,
+$endif$
       splittopskip=1.2\baselineskip, splitbottomskip=6pt,
       frametitle=##1, frametitlebackgroundcolor=#3!80!black,
       frametitlefont=\bfseries\color{white},

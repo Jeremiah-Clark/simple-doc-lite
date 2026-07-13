@@ -44,6 +44,7 @@ toc: true
 # toc-depth: 2
 # secnumdepth: 2            # 0 = none, 1 = H1, 2 = H1+H2, 3 = H1+H2+H3
 # figure-captions: true     # false = don't show image alt text as captions
+# callout-keep-whole: false # true = never split a callout across pages
 
 # ── PAGE SIZE ───────────────────────────────────────────────
 

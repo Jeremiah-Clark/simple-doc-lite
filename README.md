@@ -165,6 +165,7 @@ All settings go in `project.yaml`. Every field is optional except `output` and `
 | `toc-depth`               | `2`              | TOC heading levels (1–6)                 |
 | `secnumdepth`             | `2`              | Section numbering depth                  |
 | `figure-captions`         | `true`           | Show image alt text as captions          |
+| `callout-keep-whole`      | `false`          | Never split a callout across pages       |
 | `papersize`               | `letter`         | `letter` or `a4`                         |
 | `fontsize`                | `11pt`           | Base font size                           |
 | `font-body`               | `Noto Sans`      | Body text font                           |

@@ -23,6 +23,7 @@ toc: true
 toc-depth: 2
 secnumdepth: 2
 figure-captions: true      # show image alt text as a caption under the image
+callout-keep-whole: false  # true = never split a callout across pages
 
 # PDF settings
 fontsize: 11pt
