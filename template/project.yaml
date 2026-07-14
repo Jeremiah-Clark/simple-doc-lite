@@ -24,7 +24,8 @@ subject: ""
 # ── LAYOUT ──────────────────────────────────────────────────
 
 short-form: false          # true = compact page-1 header; false = full title page
-# short-form-image-height: "2.2in"
+# short-form-image-height: "2.2in"   # banner max height
+# short-form-image-width: "1.0"      # banner width as fraction of text width (0.0-1.0)
 
 # ── LOGO ────────────────────────────────────────────────────
 # Path to your logo image. Delete or comment out this line for no logo.

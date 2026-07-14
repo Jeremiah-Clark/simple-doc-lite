@@ -159,6 +159,7 @@ All settings go in `project.yaml`. Every field is optional except `output` and `
 | `version`                 | *(empty)*        | Version string on title page             |
 | `short-form`              | `false`          | Compact page-1 header vs full title page |
 | `short-form-image-height` | `2.2in`          | Max banner height in short-form          |
+| `short-form-image-width`  | `1.0`            | Banner width, fraction of text width     |
 | `logo`                    | *(empty)*        | Path to logo image                       |
 | `disclaimer`              | *(empty)*        | Disclaimer box (long-form only)          |
 | `toc`                     | `true`           | Show table of contents                   |

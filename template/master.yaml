@@ -17,6 +17,7 @@ lang: en-US
 # Document layout
 short-form: false
 short-form-image-height: "2.2in"
+short-form-image-width: "1.0"   # banner width as fraction of text width
 
 # Template controls
 toc: true

@@ -14,6 +14,7 @@
 %   \doctppostrule, \doctpposttitle, \doctppostauthor, \doctppostdate
 %   \docshortform           — only if short-form: true
 %   \docsfimageheight       — short-form banner max height
+%   \docsfimagewidth        — short-form banner width (fraction of \linewidth)
 
 \ifdefined\docshortform
   % ══════════════════════════════════════════════════════════
@@ -23,7 +24,7 @@
 
   \ifdefined\doclogo
     \begin{center}
-      \includegraphics[width=\linewidth,height=\docsfimageheight,keepaspectratio]{\doclogo}
+      \includegraphics[width=\docsfimagewidth\linewidth,height=\docsfimageheight,keepaspectratio]{\doclogo}
     \end{center}
     \vspace{0.25em}
   \fi
