@@ -1,8 +1,8 @@
 # Simple Doc Lite v1.2.0
 
-A free, open-source Markdown-to-PDF template. 
-Write in plain Markdown, configure in a single YAML file, run a build script, get a polished PDF. 
-No LaTeX knowledge required.
+SimpleDoc Lite is a free, open-source Markdown-to-PDF template. 
+It allows you to write in plain Markdown, configure in a single YAML file, run a build script, and get a polished PDF. 
+No LaTeX knowledge is required.
 
 **Built on:** [Pandoc](https://pandoc.org) + XeLaTeX
 
@@ -12,32 +12,40 @@ No LaTeX knowledge required.
 
 ### 1. Install prerequisites
 
-- **Pandoc 3.0+** — [pandoc.org/installing](https://pandoc.org/installing.html)
+- **Pandoc 3.0+**
+  - Download the installer for your OS: [pandoc.org/installing](https://pandoc.org/installing.html)
+  - If you are on macOS, you can also use [Homebrew](https://brew.sh/): `brew install pandoc`
 - **A TeX distribution** with XeLaTeX — TeX Live (Linux/macOS) or MiKTeX (Windows)
+  - macOS: `brew install --cask mactex` or [https://tug.org/mactex/mactex-download.html]
   - Ubuntu/Debian: `sudo apt install texlive-xetex texlive-latex-recommended texlive-latex-extra texlive-pictures texlive-plain-generic texlive-fonts-recommended lmodern`
-  - macOS: `brew install --cask mactex`
+  - Windows: [https://miktex.org/download]
 - **Noto Sans fonts**:
-  - Ubuntu/Debian: `sudo apt install fonts-noto-core fonts-noto-mono`
   - macOS: `brew install --cask font-noto-sans font-noto-sans-mono`
-  - Windows: [fonts.google.com/noto](https://fonts.google.com/noto)
+  - Ubuntu/Debian: `sudo apt install fonts-noto-core fonts-noto-mono`
+  - Any OS: [fonts.google.com/noto](https://fonts.google.com/noto)
 
 ### 2. Set up your project
 
 ```
 my-project/
-├── template.tex
-├── titlepage.tex
-├── gfm-to-latex.lua
-├── build.sh
-├── master.yaml        ← template defaults (no need to edit this)
-├── project.yaml       ← your project config (edit this)
-├── content/
-│   └── 01-introduction.md
-└── images/
+└── content/                 ← Put your .md files in this folder
+    └── 01-introduction.md
+└── images/                  ← Put your image files in this folder
     └── logo.png
+└── template/                ← The SimpleDoc template files folder
+    ├── build.sh                 ← (do not edit) pdf build script
+    ├── configs/                 ← (optional) for saving multiple config file
+    ├── gfm-to-latex.lua         ← (do not edit) latex conversion script
+    ├── master.yaml              ← (do not edit) template defaults
+    ├── project.yaml           ← Your project config file
+    ├── template.tex             ← (do not edit) general page template
+    └── titlepage.tex            ← (do not edit) title page template
 ```
 
 ### 3. Configure `project.yaml`
+
+All of your document setup is done in the `project.yaml` file. 
+At the very least, update the identifying information and input/output details at the top of the file:
 
 ```yaml
 output: "../output.pdf"
@@ -52,17 +60,28 @@ date:   "2025-06-15"
 ```
 
 `project.yaml` only needs the fields you want to set or change. 
-`master.yaml` supplies defaults for everything else — you don't need to touch it.
+Any settings not set in `project.yaml` will default to the settings in the `master.yaml` file.
 
 ### 4. Build
 
+In the Terminal, navigate to the `template` folder.
+The first time you build, you will need to make the `build.sh` file executable:
+
 ```bash
 chmod +x build.sh
+```
+
+To create the PDF, run `build.sh`:
+
+```bash
 ./build.sh
 ```
 
 Your PDF appears at the path you set in `output:`. 
-To use a different config file:
+You can save multiple config file (recommended to keep them in a sub-folder such as "configs") and call them as needed.
+If no config file is specified, the `project.yaml` file in the `template` directory will be used.
+
+To use a saved config file:
 
 ```bash
 ./build.sh configs/client-acme.yaml
@@ -75,20 +94,18 @@ Other build options:
 ./build.sh -o drafts/v2.pdf   # build to a different output path
 ```
 
-If a build fails, the full compiler output is saved to `build.log` next
-to the output PDF, and the script prints the relevant last lines plus a
-hint about the most common causes.
+If a build fails, the full compiler output is saved to `build.log` next to the output PDF, and the script prints the relevant last lines plus a hint about the most common causes.
 
 ---
 
 ## Document layouts
 
-Two layouts controlled by one YAML setting:
+There are two layout options controlled by one YAML setting:
 
-- **Long-form** (`short-form: false`, default) — Full title page on its own, TOC on a second page, then the body. Best for reports, manuals, and anything over five pages.
-- **Short-form** (`short-form: true`) — Compact header block at the top of page 1, body flows beneath, disclaimer suppressed. Best for memos, letters, and briefs (1–5 pages). Set `toc: false` for best results.
+- **Long-form** (`short-form: false`, default) — The Long-form layout has a full title page, a full Table of Contents (TOC) page, followed by the body text. Best for reports, manuals, and anything over five pages.
+- **Short-form** (`short-form: true`) — Short-form has a header block at the top of page 1, and the body text begins beneath that. The optional title page disclaimer is suppressed (add to the top of the body text if still needed). Best for memos, letters, and briefs (1–5 pages).
 
-### Recommended image sizes
+### Recommended "logo" image sizes
 
 | Layout      | Target size        | Aspect ratio | Notes                             |
 |-------------|--------------------|--------------|-----------------------------------|
@@ -99,9 +116,10 @@ Two layouts controlled by one YAML setting:
 
 ## Writing content
 
-Standard Markdown, plus:
+Write your document using standard [Markdown syntax](https://daringfireball.net/projects/markdown/), plus:
 
-**GFM-style callouts**
+**GFM-style callouts**—These render as colored boxes with a title bar. 
+Each type of callout will be a different color as set in `project.yaml`.
 
 ```markdown
 > [!NOTE]
@@ -110,33 +128,37 @@ Standard Markdown, plus:
 > [!WARNING] Custom title
 > Add custom text on the marker line.
 ```
+Example:  
+<img width="480" height="96" alt="gfm-callout1" src="https://github.com/user-attachments/assets/a3e01715-3e7b-4616-aaaf-b27fafd636e7" />
 
 Available types: `NOTE`, `TIP`, `WARNING`, `IMPORTANT`, `CAUTION`, `SUMMARY`, `EXAMPLE`.
 
-**Images** — auto-centered, width-constrained; the alt text renders as a
-small caption under the image (set `figure-captions: false` to disable):
+**Images**—Images are auto-centered and width-constrained. 
+The image alt text renders as a small caption under the image (set `figure-captions: false` to disable):
 
 ```markdown
 ![Caption](images/photo.png){ width=60% }
 ```
 
 Pixel widths (`{ width=300px }`) and percentages both work. 
+If no width is set, the image will default to 100% of text width. 
 Images that appear inline with text keep their natural size.
 
-**Task lists** — `- [x]` / `- [ ]` items render with GitHub-style
-checkboxes in place of bullets.
+**Task lists**—`- [x]` / `- [ ]` items render with GitHub-style checkboxes in place of bullets.
 
-**Tables** — standard pipe tables. Small tables keep their natural
-size; wide tables get proportional column widths so they never overflow.
+**Tables**—Standard pipe tables. 
+Small tables keep their natural size; wide tables get proportional column widths so they never overflow.
 
-**Code blocks** — fenced with optional language tag for syntax
-highlighting. Long lines wrap inside the shaded box.
+**Code blocks**—Fenced with optional language tag for syntax highlighting. 
+Long lines wrap inside the shaded box.
 
-**Page breaks** — every `#` H1 starts a new page automatically. Exception: in short-form mode, H1s do *not* force page breaks (so a multi-section memo flows continuously). Use `\newpage` for a manual break.
+**Page breaks**—Every `#` H1 starts a new page in Long-form mode. 
+In Short-form mode, H1s do *not* force page breaks (so a multi-section memo flows continuously). 
+Use `\newpage` for a manual break.
 
-**Numbering without H1s** — if a document's top-level heading is `##` (no `#` anywhere — common when the title page already carries the title), H2s are numbered as top-level sections (`1`, `2`, ...) automatically instead of `0.1`, `0.2`.
+**Numbering without H1s**—If a document's top-level heading is `##` (no `#` aside from the main title—common when the title page already carries the title), H2s are numbered as top-level sections (`1`, `2`, ...) automatically instead of `0.1`, `0.2` (set `secnumdepth: 0` to disable).
 
-**Multi-file documents** — list files in order under `input-files:` in your `project.yaml`:
+**Multi-file documents**—Files will be assembled in the order set under `input-files:` in your `project.yaml`:
 
 ```yaml
 input-files:
@@ -149,7 +171,8 @@ input-files:
 
 ## Core configuration
 
-All settings go in `project.yaml`. Every field is optional except `output` and `input-files`.
+All settings go in `project.yaml`. 
+Every field is optional except `output` and `input-files`.
 
 | Field                     | Default          | Description                              |
 | ------------------------- | ---------------- | ---------------------------------------- |
@@ -176,31 +199,32 @@ All settings go in `project.yaml`. Every field is optional except `output` and `
 | `color-link`              | `40,80,180`      | Link color, R,G,B                        |
 
 Callout colors (`color-note`, `color-tip`, etc.) default to a tuned palette (`sd-red`, `sd-blue`, `sd-orange`, `sd-green`, `sd-amber`, `sd-purple`, `sd-gray`) chosen for readable white title text. 
-Plain LaTeX color names (`red`, `blue`, `green`, ...) also work.
+Plain LaTeX color names (`red`, `blue`, `green`, ...) are also supported.
 
-**Fonts and languages** — if a configured font isn't installed, the build doesn't fail: it falls back to Latin Modern (bundled with every TeX distribution) and prints a console note. 
-For non-Latin scripts (Cyrillic, Greek, CJK, ...), set `font-body` to a font that covers your script — characters a font doesn't cover can't appear in the PDF. `lang:` (e.g., `en-US`, `de-DE`) controls hyphenation.
+**Fonts and languages**—If a configured font isn't installed, the build falls back to Latin Modern (bundled with every TeX distribution) and prints a console note. 
+For non-Latin scripts (Cyrillic, Greek, CJK, ...), set `font-body` to a font that covers your script—characters a font doesn't cover can't appear in the PDF. 
+`lang:` (e.g., `en-US`, `de-DE`) controls hyphenation.
 
 ---
 
 ## Troubleshooting
 
-**"Config file not found: project.yaml"** — Create a `project.yaml` in your project directory (use the included one as a starting point), or pass a config file explicitly: `./build.sh my-config.yaml`
+**"Config file not found: project.yaml"**—Create a `project.yaml` in the template directory (use the included one as a starting point), or pass a config file explicitly: `./build.sh config/my-config.yaml`
 
-**"No input files listed"** — Make sure your `project.yaml` has an `input-files:` list with at least one file.
+**"No input files listed"**—Make sure your `project.yaml` has an `input-files:` list with at least one file.
 
-**"Font not found" console note** — the build still succeeds using Latin Modern; install Noto Sans (see Quick Start) to get the intended look. 
+**"Font not found" console note**—The build still succeeds using Latin Modern; install Noto Sans (see Quick Start) to get the intended look. 
 Check what's installed with `fc-list | grep -i noto`, or run `./build.sh --check`.
 
-**"xelatex not found"** — Install a TeX distribution.
+**"xelatex not found"**—Install a TeX distribution.
 
-**Pandoc version errors** — Simple Doc requires Pandoc 3.0 or later. 
+**Pandoc version errors**—imple Doc requires Pandoc 3.0 or later. 
 Update from [pandoc.org/installing](https://pandoc.org/installing.html).
 
-**Callouts rendering as plain blockquotes** — Make sure `build.sh` uses `--from markdown+raw_tex+autolink_bare_uris`. 
+**Callouts rendering as plain blockquotes**—Make sure `build.sh` uses `--from markdown+raw_tex+autolink_bare_uris`. 
 Using `--from gfm` causes Pandoc to natively parse alerts before the Lua filter can handle them.
 
-**Permission denied on build.sh** — `chmod +x build.sh`
+**Permission denied on build.sh** — Run `chmod +x build.sh` from within the SimpleDoc directory.
 
 ---
 
