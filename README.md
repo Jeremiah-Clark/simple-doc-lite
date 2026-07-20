@@ -63,8 +63,7 @@ date:   "2025-06-15"
 
 Most of the settings in `project.yaml` are commented out by default—the line begins with `#`. 
 Commented lines are ignored by the Build script.
-To un-comment a line, delete the `# ` at the start of the line—the `#` and the space after it—so the setting sits flush against the left margin. 
-(A leftover leading space will cause a YAML error, since the settings must start at the far left.) 
+To un-comment a line, delete the `# ` at the start of the line—the `#` and the space after it—so the setting sits flush against the left margin (a leftover leading space will cause a YAML error, since the settings must start at the far left). 
 You only need to un-comment the line for the fields you want to set or change. 
 Any settings that remain commented in `project.yaml` will default to the settings in the `master.yaml` file.
 
