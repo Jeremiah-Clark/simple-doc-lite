@@ -16,14 +16,14 @@ input-files:
 title:   "Title"
 author:  "Author"
 date:    "YYYY-MM-DD"
-version: ""
-subject: ""
+# version: ""
+# subject: ""
 # keywords:
 #   - keyword
 
 # ── LAYOUT ──────────────────────────────────────────────────
 
-short-form: false          # true = compact page-1 header; false = full title page
+# short-form: false          # true = compact page-1 header; false = full title page
 # short-form-image-height: "2.2in"   # banner max height
 # short-form-image-width: "1.0"      # banner width as fraction of text width (0.0-1.0)
 
@@ -44,7 +44,7 @@ short-form: false          # true = compact page-1 header; false = full title pa
 # toc: true
 # toc-depth: 2
 # secnumdepth: 2            # 0 = none, 1 = H1, 2 = H1+H2, 3 = H1+H2+H3
-# figure-captions: false     # false = don't show image alt text as captions
+# figure-captions: true     # false = don't show image alt text as captions
 # callout-keep-whole: false # true = never split a callout across pages
 
 # ── PAGE SIZE ───────────────────────────────────────────────
