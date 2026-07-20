@@ -232,7 +232,7 @@ Using `--from gfm` causes Pandoc to natively parse alerts before the Lua filter 
 
 ---
 
-## Upgrade to Simple Doc Pro
+## Upgrade to SimpleDoc Pro
 
 This Lite version covers everything you need for most documents. 
 If you want the following features, check out **[SimpleDoc Pro](YOUR_GUMROAD_URL)**:
