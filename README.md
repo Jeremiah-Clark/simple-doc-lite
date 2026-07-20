@@ -31,9 +31,9 @@ No LaTeX knowledge is required.
 ```markdown
 my-project/
 ├── content/                 ← Put your .md files in this folder
-    └── 01-introduction.md
+│   └── 01-introduction.md
 ├── images/                  ← Put your image files in this folder
-    └── logo.png
+│   └── logo.png
 └── template/                ← The SimpleDoc template files folder
     ├── build.sh                 ← (do not edit) PDF build script
     ├── configs/                 ← (optional) for saving multiple config files
@@ -80,7 +80,7 @@ To create the PDF, run `build.sh`:
 ```
 
 Your PDF appears at the path you set in `output:`. 
-You can save multiple config file (a subfolder such as `configs/` keeps thing organized) and call them as needed.
+You can save multiple config files (a subfolder such as `configs/` keeps things organized) and call them as needed.
 If no config file is specified, the `project.yaml` file in the `template` directory will be used.
 
 To use a saved config file:
@@ -121,7 +121,7 @@ There are two layout options controlled by one YAML setting:
 Write your document using standard [Markdown syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax/), plus:
 
 **GFM-style callouts**—These render as colored boxes with a title bar. 
-Each callout type has its own color; override them with the `color-*` keys in `project.yaml`."
+Each callout type has its own color; override them with the `color-*` keys in `project.yaml`.
 
 ```markdown
 > [!NOTE]
@@ -164,14 +164,14 @@ Use `\newpage` for a manual break.
 
 ```yaml
 input-files:
-  - content/01-introduction.md
-  - content/02-methodology.md
-  - content/03-conclusion.md
+  - ../content/01-introduction.md
+  - ../content/02-methodology.md
+  - ../content/03-conclusion.md
 ```
 
 ---
 
-## Core configuration
+## Core Configuration
 
 All settings go in `project.yaml`. 
 Every field is optional except `output` and `input-files`.
