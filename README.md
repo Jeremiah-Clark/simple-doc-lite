@@ -61,8 +61,11 @@ author: "Your Name"
 date:   "2025-06-15"
 ```
 
-`project.yaml` only needs the fields you want to set or change. 
-Any settings not set in `project.yaml` will default to the settings in the `master.yaml` file.
+Most of the settings in `project.yaml` are commented out by default—the line begins with `#`. 
+Commented lines are ignored by the Build script.
+To un-comment a line, delete the `#` at the start of the line
+You only need to un-comment the line for the fields you want to set or change. 
+Any settings that remain commented in `project.yaml` will default to the settings in the `master.yaml` file.
 
 ### 4. Build
 
