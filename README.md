@@ -1,7 +1,7 @@
-# Simple Doc Lite v1.2.0
+# SimpleDoc Lite v1.2.0
 
 SimpleDoc Lite is a free, open-source Markdown-to-PDF template. 
-It allows you to write in plain Markdown, configure in a single YAML file, run a build script, and get a polished PDF. 
+It allows you to write in plain Markdown, configure everything in one YAML file, run a build script, and get a polished PDF. 
 No LaTeX knowledge is required.
 
 **Built on:** [Pandoc](https://pandoc.org) + XeLaTeX
@@ -10,34 +10,36 @@ No LaTeX knowledge is required.
 
 ## Quick Start
 
-### 1. Install prerequisites
+### 1. Install Prerequisites
 
 - **Pandoc 3.0+**
   - Download the installer for your OS: [pandoc.org/installing](https://pandoc.org/installing.html)
-  - If you are on macOS, you can also use [Homebrew](https://brew.sh/): `brew install pandoc`
+  - macOS: You can also use [Homebrew](https://brew.sh/): `brew install pandoc`
+  - Ubuntu/Debian: The pandoc package in Ubuntu/Debian's repositories may be older than 3.0—use the installer from pandoc.org instead.
 - **A TeX distribution** with XeLaTeX — TeX Live (Linux/macOS) or MiKTeX (Windows)
-  - macOS: `brew install --cask mactex` or [https://tug.org/mactex/mactex-download.html]
+  - macOS: `brew install --cask mactex` or [the MacTex installer](https://tug.org/mactex/mactex-download.html)
   - Ubuntu/Debian: `sudo apt install texlive-xetex texlive-latex-recommended texlive-latex-extra texlive-pictures texlive-plain-generic texlive-fonts-recommended lmodern`
-  - Windows: [https://miktex.org/download]
+  - Windows: [MiKTeX](https://miktex.org/download)
+    - `build.sh` is a bash script — run it from [Git Bash](https://gitforwindows.org/) or WSL.
 - **Noto Sans fonts**:
   - macOS: `brew install --cask font-noto-sans font-noto-sans-mono`
   - Ubuntu/Debian: `sudo apt install fonts-noto-core fonts-noto-mono`
   - Any OS: [fonts.google.com/noto](https://fonts.google.com/noto)
 
-### 2. Set up your project
+### 2. Set Up Your Project
 
-```
+```markdown
 my-project/
-└── content/                 ← Put your .md files in this folder
+├── content/                 ← Put your .md files in this folder
     └── 01-introduction.md
-└── images/                  ← Put your image files in this folder
+├── images/                  ← Put your image files in this folder
     └── logo.png
 └── template/                ← The SimpleDoc template files folder
-    ├── build.sh                 ← (do not edit) pdf build script
-    ├── configs/                 ← (optional) for saving multiple config file
-    ├── gfm-to-latex.lua         ← (do not edit) latex conversion script
+    ├── build.sh                 ← (do not edit) PDF build script
+    ├── configs/                 ← (optional) for saving multiple config files
+    ├── gfm-to-latex.lua         ← (do not edit) LaTeX conversion script
     ├── master.yaml              ← (do not edit) template defaults
-    ├── project.yaml           ← Your project config file
+    ├── project.yaml             ← Your project config file
     ├── template.tex             ← (do not edit) general page template
     └── titlepage.tex            ← (do not edit) title page template
 ```
@@ -51,8 +53,8 @@ At the very least, update the identifying information and input/output details a
 output: "../output.pdf"
 
 input-files:
-  - content/01-introduction.md
-  - content/02-main-body.md
+  - ../content/01-introduction.md
+  - ../content/02-main-body.md
 
 title:  "My Document"
 author: "Your Name"
@@ -64,7 +66,7 @@ Any settings not set in `project.yaml` will default to the settings in the `mast
 
 ### 4. Build
 
-In the Terminal, navigate to the `template` folder.
+In the terminal, navigate to the `template` folder.
 The first time you build, you will need to make the `build.sh` file executable:
 
 ```bash
@@ -78,7 +80,7 @@ To create the PDF, run `build.sh`:
 ```
 
 Your PDF appears at the path you set in `output:`. 
-You can save multiple config file (recommended to keep them in a sub-folder such as "configs") and call them as needed.
+You can save multiple config file (a subfolder such as `configs/` keeps thing organized) and call them as needed.
 If no config file is specified, the `project.yaml` file in the `template` directory will be used.
 
 To use a saved config file:
@@ -98,28 +100,28 @@ If a build fails, the full compiler output is saved to `build.log` next to the o
 
 ---
 
-## Document layouts
+## Document Layouts
 
 There are two layout options controlled by one YAML setting:
 
-- **Long-form** (`short-form: false`, default) — The Long-form layout has a full title page, a full Table of Contents (TOC) page, followed by the body text. Best for reports, manuals, and anything over five pages.
-- **Short-form** (`short-form: true`) — Short-form has a header block at the top of page 1, and the body text begins beneath that. The optional title page disclaimer is suppressed (add to the top of the body text if still needed). Best for memos, letters, and briefs (1–5 pages).
+- **Long-form** (`short-form: false`, default) — The Long-form layout has a full title page and a full Table of Contents (TOC) page, followed by the body text. Best for reports, manuals, and anything over five pages.
+- **Short-form** (`short-form: true`) — Short-form has a header block at the top of page 1, and the body text begins beneath that. The optional title page disclaimer is suppressed (if you still need it, add it to the top of the body text). Best for memos, letters, and briefs (1–5 pages).
 
-### Recommended "logo" image sizes
+### Recommended Logo Image Sizes
 
 | Layout      | Target size        | Aspect ratio | Notes                             |
 |-------------|--------------------|--------------|-----------------------------------|
 | Long-form   | 1500 × 1500 px     | Square/portrait | Centered on title page          |
-| Short-form  | 2000 × 600 px      | ~3:1 to 4:1  | Landscape banner, full text width |
+| Short-form  | 2000 × 600 px      | ~3:1 to 4:1  | Landscape banner; width adjustable with `short-form-image-width` |
 
 ---
 
-## Writing content
+## Writing Content
 
-Write your document using standard [Markdown syntax](https://daringfireball.net/projects/markdown/), plus:
+Write your document using standard [Markdown syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax/), plus:
 
 **GFM-style callouts**—These render as colored boxes with a title bar. 
-Each type of callout will be a different color as set in `project.yaml`.
+Each callout type has its own color; override them with the `color-*` keys in `project.yaml`."
 
 ```markdown
 > [!NOTE]
@@ -141,7 +143,7 @@ The image alt text renders as a small caption under the image (set `figure-capti
 ```
 
 Pixel widths (`{ width=300px }`) and percentages both work. 
-If no width is set, the image will default to 100% of text width. 
+If no width is set, the image will default to 80% of text width. 
 Images that appear inline with text keep their natural size.
 
 **Task lists**—`- [x]` / `- [ ]` items render with GitHub-style checkboxes in place of bullets.
@@ -156,7 +158,7 @@ Long lines wrap inside the shaded box.
 In Short-form mode, H1s do *not* force page breaks (so a multi-section memo flows continuously). 
 Use `\newpage` for a manual break.
 
-**Numbering without H1s**—If a document's top-level heading is `##` (no `#` aside from the main title—common when the title page already carries the title), H2s are numbered as top-level sections (`1`, `2`, ...) automatically instead of `0.1`, `0.2` (set `secnumdepth: 0` to disable).
+**Numbering without H1s**—If a document's top-level heading is `##` (no `#` anywhere in your content—common when the title page already carries the title), H2s are numbered as top-level sections (`1`, `2`, ...) automatically instead of `0.1`, `0.2` (to turn off section numbering entirely, set `secnumdepth: 0`).
 
 **Multi-file documents**—Files will be assembled in the order set under `input-files:` in your `project.yaml`:
 
@@ -198,6 +200,8 @@ Every field is optional except `output` and `input-files`.
 | `color-heading`           | `25,55,120`      | Heading color, R,G,B                     |
 | `color-link`              | `40,80,180`      | Link color, R,G,B                        |
 
+The full key list—margins, header/footer rules, line spacing, title-page spacing, lang, subject/keywords—is in project.yaml, with comments. 
+
 Callout colors (`color-note`, `color-tip`, etc.) default to a tuned palette (`sd-red`, `sd-blue`, `sd-orange`, `sd-green`, `sd-amber`, `sd-purple`, `sd-gray`) chosen for readable white title text. 
 Plain LaTeX color names (`red`, `blue`, `green`, ...) are also supported.
 
@@ -209,7 +213,7 @@ For non-Latin scripts (Cyrillic, Greek, CJK, ...), set `font-body` to a font tha
 
 ## Troubleshooting
 
-**"Config file not found: project.yaml"**—Create a `project.yaml` in the template directory (use the included one as a starting point), or pass a config file explicitly: `./build.sh config/my-config.yaml`
+**"Config file not found: project.yaml"**—Create a `project.yaml` in the template directory (use the included one as a starting point), or pass a config file explicitly: `./build.sh configs/my-config.yaml`
 
 **"No input files listed"**—Make sure your `project.yaml` has an `input-files:` list with at least one file.
 
@@ -218,27 +222,27 @@ Check what's installed with `fc-list | grep -i noto`, or run `./build.sh --check
 
 **"xelatex not found"**—Install a TeX distribution.
 
-**Pandoc version errors**—imple Doc requires Pandoc 3.0 or later. 
+**Pandoc version errors**—SimpleDoc Lite requires Pandoc 3.0 or later. 
 Update from [pandoc.org/installing](https://pandoc.org/installing.html).
 
 **Callouts rendering as plain blockquotes**—Make sure `build.sh` uses `--from markdown+raw_tex+autolink_bare_uris`. 
 Using `--from gfm` causes Pandoc to natively parse alerts before the Lua filter can handle them.
 
-**Permission denied on build.sh** — Run `chmod +x build.sh` from within the SimpleDoc directory.
+**Permission denied on build.sh**—Run `chmod +x build.sh` from within the `template/` folder in the project directory.
 
 ---
 
 ## Upgrade to Simple Doc Pro
 
 This Lite version covers everything you need for most documents. 
-If you want the following features, check out **[Simple Doc Pro](YOUR_GUMROAD_URL)**:
+If you want the following features, check out **[SimpleDoc Pro](YOUR_GUMROAD_URL)**:
 
-- **Watermarks** — "DRAFT", "CONFIDENTIAL", or any text, angled across every page
-- **Page X of Y** — total page count in the footer
-- **Custom headers** — left/center/right header content on every page
-- **Auto-date** — use today's date automatically on every build
-- **H2 page breaks** — start each subsection on a fresh page
-- **Font fallback system** — NF (Nerd Font) primary with automatic standard-Noto fallback when NF isn't installed
+- **Watermarks**—"DRAFT", "CONFIDENTIAL", or any text, angled across every page
+- **Page X of Y**—total page count in the footer
+- **Custom headers**—left/center/right header content on every page
+- **Auto-date**—use today's date automatically on every build
+- **H2 page breaks**—start each subsection on a fresh page
+- **Font fallback system**—NF (Nerd Font) primary with automatic standard-Noto fallback when NF isn't installed
 - **Working example project** with a prebuilt sample PDF
 - **Complete user guide** with in-depth configuration reference and customization tips
 
@@ -246,4 +250,4 @@ If you want the following features, check out **[Simple Doc Pro](YOUR_GUMROAD_UR
 
 ## License
 
-MIT — see [LICENSE](LICENSE). Use it however you like.
+MIT — see [LICENSE](LICENSE). Use it however you like, though I’d appreciate a link back.
