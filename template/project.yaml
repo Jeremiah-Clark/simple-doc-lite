@@ -41,11 +41,11 @@ short-form: false          # true = compact page-1 header; false = full title pa
 
 # ── NAVIGATION ──────────────────────────────────────────────
 
-toc: true
-toc-depth: 2
-secnumdepth: 2            # 0 = none, 1 = H1, 2 = H1+H2, 3 = H1+H2+H3
-figure-captions: false     # false = don't show image alt text as captions
-callout-keep-whole: false # true = never split a callout across pages
+# toc: true
+# toc-depth: 2
+# secnumdepth: 2            # 0 = none, 1 = H1, 2 = H1+H2, 3 = H1+H2+H3
+# figure-captions: false     # false = don't show image alt text as captions
+# callout-keep-whole: false # true = never split a callout across pages
 
 # ── PAGE SIZE ───────────────────────────────────────────────
 
