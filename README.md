@@ -238,7 +238,7 @@ Using `--from gfm` causes Pandoc to natively parse alerts before the Lua filter 
 ## Upgrade to SimpleDoc Pro
 
 This Lite version covers everything you need for most documents. 
-If you want the following features, check out **[SimpleDoc Pro](YOUR_GUMROAD_URL)**:
+If you want the following features, check out **[SimpleDoc Pro](https://jclark.gumroad.com/l/SimpleDocPro)**:
 
 - **Watermarks**—"DRAFT", "CONFIDENTIAL", or any text, angled across every page
 - **Page X of Y**—total page count in the footer
