@@ -1,3 +1,5 @@
+<img width="1200" height="512" alt="SimpleDoc Lite - Logo@2x" src="https://github.com/user-attachments/assets/a0b83227-25e7-420f-8fff-f4f3559f18bc" />
+
 # SimpleDoc Lite v1.2.0
 
 SimpleDoc Lite is a free, open-source Markdown-to-PDF template. 
