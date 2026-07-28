@@ -125,6 +125,17 @@ There are two layout options controlled by one YAML setting:
 
 Write your document using standard [Markdown syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax/), plus:
 
+**Frontmatter**—Frontmatter added in standard YAML format at the top of the file. These values will override the equivalent values in the configuration file. Available items are: title, author, date, and tags.
+
+```markdown
+---
+title: Article Title
+author: Your Name
+date: Date, formatted how you like
+tags: Descriptive keywords
+---
+```
+
 **GFM-style callouts**—These render as colored boxes with a title bar. 
 Each callout type has its own color; override them with the `color-*` keys in `project.yaml`.
 
