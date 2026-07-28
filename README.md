@@ -277,4 +277,4 @@ MIT — see [LICENSE](LICENSE). Use it however you like, though I’d appreciate
 
 - v1.2.0—Initial public release
 - v1.2.1—Updated README with logo; Updated logo.png with SimpleDoc Lite logo
-- v1.2.2—Added warning about images without clear lines top and bottom being treated as an inline image
+- v1.2.2—Added warning about images without clear lines top and bottom being treated as an inline image, added note about document frontmatter over-riding config files
