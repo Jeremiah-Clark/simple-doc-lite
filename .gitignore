@@ -67,3 +67,10 @@ example/
 example-output.pdf
 output.pdf
 build.log
+
+# Pro-only documents. They are tracked on main, so git normally removes
+# them when you switch to lite — but if one is ever left behind as an
+# untracked file, these entries stop `git add -A` from publishing it.
+MAINTENANCE-PLAN.md
+USER-GUIDE.md
+CHANGELOG.md
