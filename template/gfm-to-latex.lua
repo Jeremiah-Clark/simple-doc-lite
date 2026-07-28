@@ -1,6 +1,6 @@
 -- ─────────────────────────────────────────────────────────────
--- Simple Doc Lite v1.2.0 — Lua Filter
--- https://github.com/YOUR_GITHUB/simple-doc
+-- SimpleDoc Lite v1.2.0 — Lua Filter
+-- https://github.com/Jeremiah-Clark/simple-doc-lite
 -- Copyright (c) 2025 Jeremiah Clark. MIT License.
 -- ─────────────────────────────────────────────────────────────
 -- gfm-to-latex.lua
