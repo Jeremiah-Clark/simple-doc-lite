@@ -284,6 +284,13 @@ if [[ $build_status -ne 0 ]]; then
     echo "HINT: A referenced file (often an image) could not be found."
     echo "      Image paths are resolved relative to this directory."
   fi
+  if grep -q "Error parsing YAML metadata\|YAML parse exception" "$LOG"; then
+    echo "HINT: A YAML block failed to parse. The message above names the"
+    echo "      file — check your config, or the frontmatter at the top of"
+    echo "      that content file. Quote any value containing a colon"
+    echo "      (title: \"SimpleDoc: A Markdown Tool\"), and make sure each"
+    echo "      setting starts at the far left with no leading space."
+  fi
   exit $build_status
 fi
 
