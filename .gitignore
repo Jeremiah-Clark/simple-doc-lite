@@ -59,3 +59,11 @@ output.pdf
 # *.lua
 # *.yaml
 # *.sh
+
+## Pro-only artifacts — must never be committed on the lite branch
+# example/ is a Pro-only folder; a stray build there once reached the
+# public repo because this entry was missing (main has it, lite did not).
+example/
+example-output.pdf
+output.pdf
+build.log
