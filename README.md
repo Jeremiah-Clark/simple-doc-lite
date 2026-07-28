@@ -151,6 +151,9 @@ Pixel widths (`{ width=300px }`) and percentages both work.
 If no width is set, the image will default to 80% of text width. 
 Images that appear inline with text keep their natural size.
 
+For the caption to appear, the image must sit in its own paragraph—a blank line above and below it. 
+An image on its own line but touching the text above or below is treated as an inline image, so its alt text is dropped; the build prints a note when that happens.
+
 **Task lists**—`- [x]` / `- [ ]` items render with GitHub-style checkboxes in place of bullets.
 
 **Tables**—Standard pipe tables. 
