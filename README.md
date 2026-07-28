@@ -1,6 +1,6 @@
 <img width="1200" height="512" alt="SimpleDoc Lite - Logo@2x" src="https://github.com/user-attachments/assets/a0b83227-25e7-420f-8fff-f4f3559f18bc" />
 
-# SimpleDoc Lite v1.2.0
+# SimpleDoc Lite v1.2.1
 
 SimpleDoc Lite is a free, open-source Markdown-to-PDF template. 
 It allows you to write in plain Markdown, configure everything in one YAML file, run a build script, and get a polished PDF. 
@@ -259,3 +259,10 @@ If you want the following features, check out **[SimpleDoc Pro](https://jclark.g
 ## License
 
 MIT — see [LICENSE](LICENSE). Use it however you like, though I’d appreciate a link back.
+
+---
+
+## Change Log
+
+- v1.2.0—Initial public release
+- v1.2.1—Added warning about images without clear lines top and bottom being treated as an inline image
