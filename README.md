@@ -125,16 +125,22 @@ There are two layout options controlled by one YAML setting:
 
 Write your document using standard [Markdown syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax/), plus:
 
-**Frontmatter**—Frontmatter added in standard YAML format at the top of the file. These values will override the equivalent values in the configuration file. Available items are: title, author, date, and tags.
+**Frontmatter**—A block of YAML at the very top of a content file, before any other text. 
+Any setting from `project.yaml` can go here, and the frontmatter value wins for that document—useful for values that belong to the article itself, such as its title and date.
 
-```markdown
+```yaml
 ---
-title: Article Title
+title: "Article Title"
 author: Your Name
-date: Date, formatted how you like
-tags: Descriptive keywords
+date: 2026-05-05
 ---
 ```
+
+The date renders exactly as you write it, in whatever format you prefer. 
+Quote any value containing a colon (`title: "SimpleDoc: A Markdown Tool"`), or the build will stop with a YAML error. 
+Keys that aren't SimpleDoc settings—`tags`, `slug`, and the like—are ignored, so any frontmatter your website or notes app expects can stay. 
+`output` and `input-files` are the two exceptions: they are read from the configuration file only, so setting them in frontmatter has no effect. 
+In a multi-file document, every file's frontmatter is read and the last file to set a value wins.
 
 **GFM-style callouts**—These render as colored boxes with a title bar. 
 Each callout type has its own color; override them with the `color-*` keys in `project.yaml`.
