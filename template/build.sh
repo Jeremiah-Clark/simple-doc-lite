@@ -1,6 +1,6 @@
 #!/bin/bash
 # ─────────────────────────────────────────────────────────────
-# SimpleDoc Lite v1.2.0 — Build Script
+# SimpleDoc Lite v1.2.1 — Build Script
 # Converts Markdown files into a styled PDF via Pandoc + XeLaTeX.
 #
 # All project settings live in project.yaml (or a named config).
