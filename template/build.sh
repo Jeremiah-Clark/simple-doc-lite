@@ -287,5 +287,13 @@ if [[ $build_status -ne 0 ]]; then
   exit $build_status
 fi
 
+# Surface the Lua filter's notes before the log is discarded. These are
+# advisory: the build succeeded, but something in the content probably
+# didn't render the way the author intended.
+if grep -q '^SimpleDoc-note: ' "$LOG" 2>/dev/null; then
+  echo ""
+  grep '^SimpleDoc-note: ' "$LOG" | sort -u | sed 's/^SimpleDoc-note: /  NOTE: /'
+fi
+
 rm -f "$LOG"
 echo "Done → $OUTPUT"

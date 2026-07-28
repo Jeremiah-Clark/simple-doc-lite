@@ -178,6 +178,48 @@ function Figure(el)
   end
 end
 
+-- Warn about images that LOOK standalone but aren't.
+--
+-- A caption only renders when the image is alone in its paragraph (a
+-- blank line above and below), because that is what Pandoc turns into a
+-- Figure. An image merely alone on its own *line* — no blank line
+-- separating it from the surrounding text — stays an inline image
+-- inside that paragraph, so its alt text is silently dropped.
+--
+-- The two look identical in the Markdown and nearly identical in the
+-- PDF (an inline image on its own line still renders full width), so
+-- the lost caption is easy to miss. Warn instead of "fixing" it:
+-- promoting the image would split the author's paragraph and reflow the
+-- page, which is not ours to decide.
+local function is_break(inline)
+  return inline == nil or inline.t == "SoftBreak" or inline.t == "LineBreak"
+end
+
+local function warn_uncaptioned_images(inlines)
+  if not figure_captions then return end
+
+  -- Does the block hold anything besides this image and layout whitespace?
+  local has_other_content = false
+  for _, inline in ipairs(inlines) do
+    if not (inline.t == "Image" or inline.t == "Space"
+            or inline.t == "SoftBreak" or inline.t == "LineBreak") then
+      has_other_content = true
+      break
+    end
+  end
+  if not has_other_content then return end
+
+  for i, inline in ipairs(inlines) do
+    if inline.t == "Image" and #inline.caption > 0
+       and is_break(inlines[i - 1]) and is_break(inlines[i + 1]) then
+      io.stderr:write(string.format(
+        'SimpleDoc-note: no caption for "%s" — the image shares a paragraph '
+        .. 'with other text. Put a blank line above and below it.\n',
+        inline.src))
+    end
+  end
+end
+
 function Para(el)
   if #el.content == 1 and el.content[1].t == "Image" then
     local img = el.content[1]
@@ -188,6 +230,13 @@ function Para(el)
       pandoc.RawBlock("latex", "\\end{center}"),
     }
   end
+  warn_uncaptioned_images(el.content)
+end
+
+-- Tight list items hold their content in Plain rather than Para, so the
+-- same check has to run there for images inside bullets.
+function Plain(el)
+  warn_uncaptioned_images(el.content)
 end
 
 -- NOTE: standalone images (their own paragraph or figure) get the 80%
@@ -415,6 +464,7 @@ return {
     Code       = Code,
     Figure     = Figure,
     Para       = Para,
+    Plain      = Plain,
     Header     = Header,
     Str        = Str,
     Table      = Table,
