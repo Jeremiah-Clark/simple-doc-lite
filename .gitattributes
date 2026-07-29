@@ -1,0 +1,12 @@
+# Keep development files out of release archives.
+#
+# `git archive` honors export-ignore, and GitHub builds a release's
+# "Source code (zip/tar.gz)" assets with git archive — so anything
+# marked here is excluded from what people download from the Releases
+# page, while staying tracked in the repository.
+#
+# The rule must be present in the COMMIT BEING TAGGED, so add or change
+# it before cutting the tag, not after.
+.gitignore      export-ignore
+.gitattributes  export-ignore
+.github/        export-ignore
